@@ -3,13 +3,12 @@ using System.Collections;
 
 public class Agent : MonoBehaviour {
 
-    private bool carryingTarget;
-    private Human currentTarget;
+    private bool carryingTarget; // Agent is carrying a target
+    private Human currentTarget; // Target to rescue
 
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
-	
 	}
 	
 	// Update is called once per frame
@@ -34,4 +33,13 @@ public class Agent : MonoBehaviour {
 	private void sendEnvironmentData() {
 		// FIXME
 	}
+
+	private void moveToExit() {
+
+	}
+
+	private void moveToTarget() {
+    	// FIXME
+	}
+
 }
