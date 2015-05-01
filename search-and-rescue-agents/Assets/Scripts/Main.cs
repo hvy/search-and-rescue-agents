@@ -28,6 +28,8 @@ public class Main : MonoBehaviour {
 
 				Debug.Log ("Spawning rescue agent at " + clickPos);
 
+				clickPos.z = 0;
+
 				AgentFactory.spawnAgentAt (clickPos);
 
 			}

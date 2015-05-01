@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Agent : MonoBehaviour {
 
@@ -11,7 +12,7 @@ public class Agent : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
-    	path = new ArrayList<GNode>();
+    	//path = new ArrayList<GNode>();
 	}
 
 	// Update is called once per frame
@@ -25,7 +26,7 @@ public class Agent : MonoBehaviour {
 		else if (currentTarget != null)
 		    moveToTarget();
 		else
-		    search();
+		    //search();
 
 		collisionAvoidance();
 
@@ -66,7 +67,7 @@ public class Agent : MonoBehaviour {
 
 	// Assign a target to this agent. Should be decided by the Base.
 	public void assignTarget(Human target) {
-		currentTarget = human;
+		//currentTarget = human;
 	}
 
 }
