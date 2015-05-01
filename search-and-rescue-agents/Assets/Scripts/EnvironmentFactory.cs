@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class EnvironmentFactory : MonoBehaviour {
+public class EnvironmentFactory {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public static Environment createBasicEnvironment () {
+		Environment env = new Environment ();
+
+		// TODO
+
+		return env;
 	}
 }
