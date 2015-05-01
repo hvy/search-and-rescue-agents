@@ -25,7 +25,11 @@ public class Main : MonoBehaviour {
 			// On mouse click, create a rescue agent
 			if (Input.GetButtonDown ("Fire1")) {
 				Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
 				Debug.Log ("Spawning rescue agent at " + clickPos);
+
+				AgentFactory.spawnAgentAt (clickPos);
+
 			}
 			
 			// On Space bar click, start the rescue simulation
