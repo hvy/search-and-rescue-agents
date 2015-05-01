@@ -27,8 +27,8 @@ public class PathFinding
 				{
                         
                         // TODO A* with space-time should also add time steps in total cost here, if Pause is executed.
-				if (GameState.Instance.customers.ContainsKey(step.getPos()))
-							return new Path (step, this, TotalCost + stepCost + 0.0f, Length + 1); // heuristics, costs more going through waypoints.
+//				if (GameState.Instance.customers.ContainsKey(step.getPos()))
+//							return new Path (step, this, TotalCost + stepCost + 0.0f, Length + 1); // heuristics, costs more going through waypoints.
 						return new Path (step, this, TotalCost + stepCost, Length + 1);
 				}
 				public IEnumerator GetEnumerator ()
@@ -105,38 +105,38 @@ public class PathFinding
 				return null;
 		}
 
-		public static void draw (List<GNode> p)
-		{
-				GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
-				Renderer renderer;
-		
-				if (!(renderer = camera.GetComponent<Renderer> ()))
-						renderer = camera.AddComponent<Renderer> ();
-				if (renderer.paths == null)
-					renderer.paths = new List<List<GNode>>();
-
-				if (renderer.colors == null)
-					renderer.colors = new List<Color>();
-
-				renderer.paths.Add(p);
-				float r = UnityEngine.Random.Range(0.0f, 1f);
-				float b = UnityEngine.Random.Range(0.0f, 1f);
-				float g = UnityEngine.Random.Range(0.0f, 1f);
-				Color col = new Color (r, g, b, 1.0f);
-				renderer.colors.Add(col);
-		}
-
-	public static void clearDrawnPaths() {
-		GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
-		Renderer renderer;
-		
-		if (!(renderer = camera.GetComponent<Renderer> ()))
-			renderer = camera.AddComponent<Renderer> ();
-
-		renderer.clear();
-
-
-	}
+//		public static void draw (List<GNode> p)
+//		{
+//				GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
+//				Renderer renderer;
+//
+//				if (!(renderer = camera.GetComponent<Renderer> ()))
+//						renderer = camera.AddComponent<Renderer> ();
+//				if (renderer.paths == null)
+//					renderer.paths = new List<List<GNode>>();
+//
+//				if (renderer.colors == null)
+//					renderer.colors = new List<Color>();
+//
+//				renderer.paths.Add(p);
+//				float r = UnityEngine.Random.Range(0.0f, 1f);
+//				float b = UnityEngine.Random.Range(0.0f, 1f);
+//				float g = UnityEngine.Random.Range(0.0f, 1f);
+//				Color col = new Color (r, g, b, 1.0f);
+//				renderer.colors.Add(col);
+//		}
+//
+//	public static void clearDrawnPaths() {
+//		GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
+//		Renderer renderer;
+//
+//		if (!(renderer = camera.GetComponent<Renderer> ()))
+//			renderer = camera.AddComponent<Renderer> ();
+//
+//		renderer.clear();
+//
+//
+//	}
 
 	public static bool isInObstacle (Vector2 pos, List<Vector2[]> polygons)
 	{
@@ -183,21 +183,20 @@ public class PathFinding
 		return (lineStart + ((Vector3)(lhs * num2)));
 	}
 	
-	public static void draw (List<GNode> p, Color color)
-	{
-		GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
-		Renderer renderer;
-		
-		if (!(renderer = camera.GetComponent<Renderer> ()))
-			renderer = camera.AddComponent<Renderer> ();
-		if (renderer.paths == null)
-			renderer.paths = new List<List<GNode>>();
-		
-		if (renderer.colors == null)
-			renderer.colors = new List<Color>();
-		
-		renderer.paths.Add(p);
-		renderer.colors.Add(color);
-	}
+//	public static void draw (List<GNode> p, Color color)
+//		GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
+//		Renderer renderer;
+//
+//		if (!(renderer = camera.GetComponent<Renderer> ()))
+//			renderer = camera.AddComponent<Renderer> ();
+//		if (renderer.paths == null)
+//			renderer.paths = new List<List<GNode>>();
+//
+//		if (renderer.colors == null)
+//			renderer.colors = new List<Color>();
+//
+//		renderer.paths.Add(p);
+//		renderer.colors.Add(color);
+//	}
 	
 }
