@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Human : MonoBehaviour {
 
+	private Vector2 position;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -12,4 +14,9 @@ public class Human : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public Vector2 getPos() {
+    	return position;
+    }
+
 }

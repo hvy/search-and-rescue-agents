@@ -3,6 +3,9 @@ using System.Collections;
 
 public class BaseStation : MonoBehaviour {
 
+	public GridEnvironment gridEnvironment;
+
+
 	// Use this for initialization
 	void Start () {
 	
