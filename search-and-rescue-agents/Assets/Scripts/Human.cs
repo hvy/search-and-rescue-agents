@@ -3,11 +3,12 @@ using System.Collections;
 
 public class Human : MonoBehaviour {
 
-	private Vector2 position;
+	public int health = 100;
+	public bool saved = false;
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -15,8 +16,5 @@ public class Human : MonoBehaviour {
 	
 	}
 
-    public Vector2 getPos() {
-    	return position;
-    }
 
 }

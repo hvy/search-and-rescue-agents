@@ -14,6 +14,7 @@ public class EnvironmentFactory {
 		ground.transform.localScale = new Vector3 (height, width, 1);
 		ground.transform.parent = GameObject.Find ("_Environment").transform;
 		ground.name = "ground";
+		ground.GetComponent<Renderer>().material.color = Color.black;
 
 		// Create obstacles
 		List<Vector2> obstacles = new List<Vector2>();
@@ -41,9 +42,15 @@ public class EnvironmentFactory {
 
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-2,2)));
 
+		// Set entrances
 		List<Vector2> entrances = new List<Vector2>();
 
 		entrances.Add(new Vector2(-2,1));
+
+		// Set humans
+		List<Human> humans = new List<Human>();
+		HumanFactory.spawnHumanAt(new Vector2 (0,0));
+
 
 		Environment env = new Environment (height, width, new List<Human>(), entrances, obstacles);
 

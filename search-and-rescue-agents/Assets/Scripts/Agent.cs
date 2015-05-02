@@ -60,7 +60,7 @@ public class Agent : MonoBehaviour {
 	private void sendEnvironmentData(Collider2D other) {
 		Vector2 pos = other.transform.position;
 		string name = other.name;
-    	Debug.Log("Sending data " + name + " at " + pos);
+//    	Debug.Log("Sending data " + name + " at " + pos);
 		// FIXME send data to Base
 
 	}
@@ -81,7 +81,7 @@ public class Agent : MonoBehaviour {
 		goal = path[0].getPos();
 		path.RemoveAt(0);
 	} else {
-		goal = currentTarget.getPos();
+		goal = currentTarget.transform.position;
 	}
     	// FIXME
 	}

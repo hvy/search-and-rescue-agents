@@ -8,8 +8,9 @@ public class AgentFactory : MonoBehaviour {
 //		Transform prefab = Resources.Load("Robot Kyle/Model/Robot Kyle", typeof(Transform)) as Transform;
 		Transform prefab = Resources.Load("Prefabs/Agent", typeof(Transform)) as Transform;
 		Transform agent = GameObject.Instantiate (prefab, pos, Quaternion.LookRotation (Vector3.up)) as Transform;
-		Debug.Log (agent);
+//		Debug.Log (agent);
 		agent.parent = GameObject.Find ("_Agents").transform;
 		agent.gameObject.name = "agent";
+		agent.gameObject.GetComponent<Renderer>().material.color = Color.blue;
 	}
 }
