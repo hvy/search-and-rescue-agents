@@ -8,7 +8,7 @@ public class HumanFactory : MonoBehaviour {
 		Transform prefab = Resources.Load("Prefabs/Human", typeof(Transform)) as Transform;
 		Transform human = GameObject.Instantiate (prefab, pos, Quaternion.LookRotation (Vector3.up)) as Transform;
 
-		human.parent = GameObject.Find ("_Environment").transform;
+		human.parent = GameObject.Find ("_Humans").transform;
 		human.gameObject.name = "human";
 		human.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
 

@@ -10,6 +10,8 @@ GameObject:
   - 4: {fileID: 411356}
   - 33: {fileID: 3371682}
   - 23: {fileID: 2347080}
+  - 58: {fileID: 5811644}
+  - 114: {fileID: 11489014}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -59,7 +61,33 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 171222}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!58 &5811644
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171222}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 5.96046448e-08, y: 0}
+  serializedVersion: 2
+  m_Radius: .00100000005
+--- !u!114 &11489014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a93bf5d8323cb429eb7279aef8449fe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  saved: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

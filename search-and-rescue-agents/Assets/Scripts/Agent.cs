@@ -5,11 +5,14 @@ using System.Collections.Generic;
 public class Agent : MonoBehaviour {
 
 	public float velocity;
+	public float rotationSpeed;
+	public float collisionDistance;
 
     private bool carryingTarget; // Agent is carrying a target
     private Human currentTarget; // Target to rescue
     public Vector2 goal; // current position to move toward
-    private Vector2 avoidanceDirection;
+   	public Vector2 start;
+
 
     private List<GNode> path; // path to current goal (if exists)
 
@@ -17,6 +20,7 @@ public class Agent : MonoBehaviour {
 	void Start () {
     	carryingTarget = false;
     	path = new List<GNode>();
+    	start = transform.position;
 	}
 
 	// Update is called once per frame
@@ -30,49 +34,57 @@ public class Agent : MonoBehaviour {
 		else
 		    search();
 
-		collisionAvoidance();
-
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
     	// TODO, collect information. This trigger will find humans and obstacles.
 		sendEnvironmentData(other);
+
+		// Found human
+		if (other.name == "human") {
+        	other.gameObject.GetComponent<Renderer>().material.color = Color.green;
+		}
+
+    }
+
+    void OnTriggerStay2D(Collider2D other) {
+        if (other.name == "human") {
+        	// Only save humans who are not already saved and close.
+            if (Vector3.Distance(transform.position, other.transform.position) < 0.1f && !((Human)other.gameObject.GetComponent(typeof(Human))).saved) {
+				pickUpTarget(other);
+            }
+        }
+
     }
 
     private void move (Vector2 g) {
-    	if (avoidanceDirection.x == 0 && avoidanceDirection.y == 0)
-        	g = goal;
-        else
-        	g = avoidanceDirection;
-
-       	float speed = 100f;
-		Vector3 targetDir = (Vector3) g - transform.position;
-	   	float step = speed * Time.deltaTime;
-	   	Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
-	   	transform.rotation = Quaternion.LookRotation(newDir);
-
-		float distance = Vector2.Distance (GetComponent<Rigidbody2D>().position, g);
-		GetComponent<Rigidbody2D>().transform.position = (Vector2.Lerp (GetComponent<Rigidbody2D>().transform.position, g, velocity * Time.deltaTime / distance));
+    	collisionAvoidance(g);
 	}
-
 
     private void search() {
     	// FIXME
     	move(new Vector2(0,0));
     }
 
-	private void pickUpTarget() {
-		// FIXME
+	private void pickUpTarget(Collider2D human) {
+		gameObject.GetComponent<Renderer>().material.color = Color.white;
+		human.gameObject.SetActive(false);
+        currentTarget = (Human) human.gameObject.GetComponent(typeof(Human));
+        currentTarget.saved = true;
+		carryingTarget = true;
 	}
 
 	private void putDownTarget() {
-    	// FIXME
+		gameObject.GetComponent<Renderer>().material.color = Color.blue;
+		currentTarget.transform.position = transform.position;
+      	currentTarget.gameObject.SetActive(true);
+      	carryingTarget = false;
+      	currentTarget = null;
     }
 
 	private void sendEnvironmentData(Collider2D other) {
 		Vector2 pos = other.transform.position;
 		string name = other.name;
-//    	Debug.Log("Sending data " + name + " at " + pos);
 		// FIXME send data to Base
 
 	}
@@ -86,59 +98,78 @@ public class Agent : MonoBehaviour {
 		}
 		move(goal);
 
+		if (Vector2.Distance(transform.position, closestEntrance()) < 0.5f) {
+			putDownTarget();
+		}
+
 	}
 
 	private void moveToTarget() {
-	if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
-		goal = path[0].getPos();
-		path.RemoveAt(0);
-	} else {
-		goal = currentTarget.transform.position;
+		if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
+			goal = path[0].getPos();
+			path.RemoveAt(0);
+		} else {
+			goal = currentTarget.transform.position;
+		}
 	}
-    	// FIXME
-	}
 
-	private void collisionAvoidance() {
+	private bool collisionAvoidance(Vector2 goal) {
+		bool avoiding = false;
 
-
-		// Avoid obstacles
 		Vector2 position = (Vector2) transform.position;
-
-		//new avoidance
-
 		Vector2 dir = (goal - position).normalized;
-		RaycastHit2D hit;
-		float distToObstacle = 10f;
 
-		Vector2 movementDirection = (dir + position);
-
-		Vector2 velocityDirection = ((movementDirection)-position).normalized;
-
-		Vector3 moveDir = new Vector3(movementDirection.x, 0.0f, movementDirection.y);
-		Debug.DrawLine(position, movementDirection, Color.green);
+		float distToObstacle = collisionDistance*Vector3.Distance(position, goal)/10f;
 
 		// Bit shift the index of the layer (8) to get a bit mask
         int layerMask = 1 << 8;
 
+		Debug.DrawLine(position, transform.position+transform.forward*5f, Color.green);
         // This would cast rays only against colliders in layer 8, so we just inverse the mask.
         layerMask = ~layerMask;
-//		hit = Physics2D.Raycast(position, transform.forward, distToObstacle, layerMask);
-//        if (hit.collider != null) {
-//
-//				Debug.Log(hit.transform.name);
-//				Debug.DrawLine(position, hit.point, Color.red);
-//				dir = new Vector2(position.x-2, movementDirection.y);
-//				Debug.Log("MOVE TOWARD " + hit.point);
-//				avoidanceDirection = dir;
-//        } else {
-//        	avoidanceDirection = new Vector2(0,0);
-//        }
+		RaycastHit2D hit;
+
+		hit = Physics2D.Raycast(position, transform.forward, distToObstacle, layerMask);
+        if (hit.collider != null) {
+        	Debug.DrawLine(position, hit.point, Color.red);
+            dir += hit.normal * 10;
+            avoiding = true;
+        }
+
+        Vector3 left = transform.position;
+        Vector3 right = transform.position;
+
+		left.x -= 0.5f;
+		right.x += 0.5f;
+
+        hit = Physics2D.Raycast(left, transform.forward, distToObstacle, layerMask);
+		if (hit.collider != null) {
+			Debug.DrawLine(position, hit.point, Color.red);
+			dir += hit.normal * 10;
+			avoiding = true;
+		}
+
+		hit = Physics2D.Raycast(right, transform.forward, distToObstacle, layerMask);
+		if (hit.collider != null) {
+			Debug.DrawLine(position, hit.point, Color.red);
+			dir += hit.normal * 10;
+			avoiding = true;
+		}
+
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, dir, Time.deltaTime * rotationSpeed, 10.0f);
+      	transform.rotation = Quaternion.LookRotation(newDir);
+
+        Vector3 posDiff = transform.forward * velocity * Time.deltaTime;
+        posDiff.z = 0f;
+        transform.position += posDiff;
+
+        return avoiding;
 
 	}
 
 	private Vector2 closestEntrance() {
 		// FIXME call BaseStation to get cloest entrance
-		return new Vector2(1,1);
+		return start;
 	}
 
 	// Assign a target to this agent. Should be decided by the Base.

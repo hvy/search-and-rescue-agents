@@ -40,6 +40,24 @@ public class EnvironmentFactory {
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-1,-2)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-2,-2)));
 
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-3)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-4)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-5)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-6)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-7)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-8)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-9)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-10)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-11)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-12)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(4,-13)));
+
+
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-2,-10)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-2,-9)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-2,-8)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-2,-7)));
+
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-2,2)));
 
 		// Set entrances
