@@ -10,7 +10,7 @@ public class HumanFactory : MonoBehaviour {
 
 		human.parent = GameObject.Find ("_Humans").transform;
 		human.gameObject.name = "human";
-		human.gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+		human.gameObject.GetComponent<Renderer>().material.color = Color.red;
 
 		return (Human) human.gameObject.GetComponent("Human");
 	}

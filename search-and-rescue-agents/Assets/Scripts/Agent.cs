@@ -64,10 +64,15 @@ public class Agent : MonoBehaviour {
         if (other.name == "human") {
         	// Only save humans who are not already saved and close.
         	Human human = (Human) other.gameObject.GetComponent(typeof(Human));
-        	currentTarget = human;
+        	if (!carryingTarget)
+        		currentTarget = human;
             if (Vector3.Distance(transform.position, other.transform.position) < 0.1f && !human.saved) {
 				pickUpTarget(other);
             }
+        }
+
+        if (other.name == "obstacle") {
+        	other.gameObject.GetComponent<Renderer>().material.color = Color.green;
         }
 
     }
@@ -111,6 +116,7 @@ public class Agent : MonoBehaviour {
 	private void sendEnvironmentData(Collider2D other) {
 		Vector2 pos = other.transform.position;
 		string name = other.name;
+		Debug.Log("Sending " + name + " at " + pos);
 		// FIXME send data to Base
 
 	}

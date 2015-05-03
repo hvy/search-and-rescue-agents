@@ -95,12 +95,12 @@ public class EnvironmentFactory {
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-12)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-11)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-10)));
-//		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-9)));
-//		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-8)));
-//		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-7)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-9)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-8)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-7)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-6)));
-		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-5)));
-		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-4)));
+//		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-5)));
+//		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-4)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-3)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-2)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(-10,-1)));
@@ -160,8 +160,15 @@ public class EnvironmentFactory {
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, 2)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, 1)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, 0)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -1)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -2)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -3)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -4)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -5)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -6)));
+		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -7)));
+//		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -8)));
 
-		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -9)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -10)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -11)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -12)));
@@ -172,18 +179,11 @@ public class EnvironmentFactory {
 		// Set entrances
 		List<Vector2> entrances = new List<Vector2>();
 
-		entrances.Add(new Vector2(-10,-9));
-		entrances.Add(new Vector2(-10,-8));
-		entrances.Add(new Vector2(-10,-7));
+		entrances.Add(new Vector2(-10,-4));
+		entrances.Add(new Vector2(-10,-5));
 
-		entrances.Add(new Vector2(10,-1));
-		entrances.Add(new Vector2(10,-2));
-		entrances.Add(new Vector2(10,-3));
-		entrances.Add(new Vector2(10,-4));
-		entrances.Add(new Vector2(10,-5));
-		entrances.Add(new Vector2(10,-6));
-		entrances.Add(new Vector2(10,-7));
 		entrances.Add(new Vector2(10,-8));
+		entrances.Add(new Vector2(10,-9));
 
 		// Set humans
 		List<Human> humans = new List<Human>();
