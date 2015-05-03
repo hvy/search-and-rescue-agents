@@ -192,6 +192,9 @@ public class EnvironmentFactory {
 		List<Human> humans = new List<Human>();
 		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-4,0)));
 		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (0,-8)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (4,10)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (7,2)));
+
 
 		Environment env = new Environment (height, width, humans, entrances, obstacles);
 

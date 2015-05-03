@@ -76,7 +76,7 @@ public class Agent : MonoBehaviour {
     	else {
     		int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
     		int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
-            if (searchCount > 100) {
+            if (searchCount > 200) {
     			goal = new Vector2(h,w);
     			searchCount = 0;
             }
