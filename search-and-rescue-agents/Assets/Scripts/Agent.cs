@@ -20,6 +20,7 @@ public class Agent : MonoBehaviour {
     private System.Random rand;
     private long searchCount = 0;
 
+
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
@@ -27,9 +28,10 @@ public class Agent : MonoBehaviour {
     	path = new List<GNode>();
     	start = transform.position;
     	rand = new System.Random();
+    	Display.agentCount++;
 	}
 
-	// Update is called once per frame
+	// Update is called once per fr	ame
 	void Update () {
 		// FIXME
 		insideEnvironment = isInsideEnvironment();
@@ -41,6 +43,10 @@ public class Agent : MonoBehaviour {
 		else
 		    search();
 
+	}
+	void OnDrawGizmos() {
+		Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, 4.0f);
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
@@ -76,7 +82,7 @@ public class Agent : MonoBehaviour {
     	else {
     		int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
     		int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
-            if (searchCount > 200) {
+            if (searchCount > 100) {
     			goal = new Vector2(h,w);
     			searchCount = 0;
             }
@@ -99,6 +105,7 @@ public class Agent : MonoBehaviour {
       	currentTarget.gameObject.SetActive(true);
       	carryingTarget = false;
       	currentTarget = null;
+      	Display.currentRescued++;
     }
 
 	private void sendEnvironmentData(Collider2D other) {

@@ -22,6 +22,7 @@ public class Main : MonoBehaviour {
 		env = EnvironmentFactory.createBasicEnvironment ();
 		agents = new List<Agent>();
 		baseStation = new BaseStation(env.entrances, env.height, env.width);
+		Display.humans = env.humans.Count;
 	}
 
 	void Update () {
@@ -30,7 +31,7 @@ public class Main : MonoBehaviour {
 			if (Input.GetButtonDown ("Fire1")) {
 				Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-				Debug.Log ("Spawning rescue agent at " + clickPos);
+//				Debug.Log ("Spawning rescue agent at " + clickPos);
 
 				clickPos.z = 0;
 

@@ -161,15 +161,12 @@ public class EnvironmentFactory {
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, 1)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, 0)));
 
-
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -9)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -10)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -11)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -12)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -13)));
 		obstacles.Add(ObstacleFactory.spawnObstacleAt(new Vector2(10, -14)));
-
-
 
 
 		// Set entrances
@@ -194,6 +191,7 @@ public class EnvironmentFactory {
 		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (0,-8)));
 		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (4,10)));
 		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (7,2)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-2,10)));
 
 
 		Environment env = new Environment (height, width, humans, entrances, obstacles);
