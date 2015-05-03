@@ -11,7 +11,9 @@ public class Main : MonoBehaviour {
 
 	private int numAgents;
 	private Environment env = null;
+	private BaseStation baseStation;
 	private List<Agent> agents;
+
 	
 	void Start () {
 		Debug.Log ("Starting main...");
@@ -19,6 +21,7 @@ public class Main : MonoBehaviour {
 		// Create the environment with the obstacles and the humans
 		env = EnvironmentFactory.createBasicEnvironment ();
 		agents = new List<Agent>();
+		baseStation = new BaseStation(env.entrances, env.height, env.width);
 	}
 
 	void Update () {
@@ -31,7 +34,9 @@ public class Main : MonoBehaviour {
 
 				clickPos.z = 0;
 
-				agents.Add(AgentFactory.spawnAgentAt (clickPos));
+				Agent agent = AgentFactory.spawnAgentAt (clickPos);
+				agent.setBase(baseStation);
+				agents.Add(agent);
 
 			}
 			
