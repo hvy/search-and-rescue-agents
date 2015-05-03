@@ -7,7 +7,7 @@ public class Environment {
 	public int width, height;
 	public List<Human> humans;
 	public List<Vector2> entrances;
-	public List<Vector2> obstacles;
+	public List<Vector2> obstacles; // this should obviously be other objects for polygonal maps
 
 	public List<GameObject> gameObjects;
 

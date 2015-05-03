@@ -116,7 +116,12 @@ public class Agent : MonoBehaviour {
 	private void sendEnvironmentData(Collider2D other) {
 		Vector2 pos = other.transform.position;
 		string name = other.name;
-		Debug.Log("Sending " + name + " at " + pos);
+		if (name == "obstacle")
+			baseStation.uploadObstacleLocation(pos);
+		else if (name == "human")
+			baseStation.uploadTargetLocation(pos);
+//		else if (name == "human")
+//        	baseStation.uploadTargetLocation(pos);
 		// FIXME send data to Base
 
 	}

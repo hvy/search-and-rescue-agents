@@ -12,10 +12,15 @@ public class BaseStation : MonoBehaviour {
     	this.entrances = entrances;
     	this.height = height;
     	this.width = width;
+    	gridEnvironment = new GridEnvironment(height, width, 0.1f);
+
+    	Transform prefab = Resources.Load("Prefabs/Base", typeof(Transform)) as Transform;
+    	GameObject.Instantiate (prefab, new Vector3(0,0,0), Quaternion.LookRotation (Vector3.up));
 	}
 
 	// Use this for initialization
 	void Start () {
+	Debug.Log("START");
 
 	}
 
@@ -23,4 +28,18 @@ public class BaseStation : MonoBehaviour {
 	void Update () {
 
 	}
+
+	public void uploadTargetLocation(Vector2 loc) {
+        gridEnvironment.addHuman(loc);
+	}
+
+	// TODO how is this supposed to work? Should we maybe assume everything not identified is ground?
+	public void uploadGroundLocation(Vector2 loc) {
+		gridEnvironment.addGround(loc);
+	}
+
+	public void uploadObstacleLocation(Vector2 loc) {
+		gridEnvironment.addObstacle(loc);
+	}
+
 }
