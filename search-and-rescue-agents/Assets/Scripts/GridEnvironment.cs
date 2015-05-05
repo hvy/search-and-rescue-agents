@@ -91,8 +91,8 @@ public class GridEnvironment {
 
     private Vector2 convertToGrid(Vector2 pos) {
         // subtract by a little to prevent rounding up
-        pos.x = pos.x+width/2 -0.001f;
-        pos.y = pos.y+height/2 - 0.001f;
+        pos.x = pos.x+width/2 -0.002f;
+        pos.y = pos.y+height/2 - 0.002f;
         return new Vector2((int)pos.x/tileSize, (int)pos.y/tileSize);
     }
 
