@@ -42,11 +42,12 @@ public class Agent : MonoBehaviour {
 		    moveToTarget();
 		else
 		    search();
+		Debug.DrawLine(transform.position, goal, Color.white);
 
 	}
 	void OnDrawGizmos() {
 		Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, 4.0f);
+//        Gizmos.DrawWireSphere(transform.position, 4.0f);
 	}
 
     void OnTriggerEnter2D(Collider2D other) {

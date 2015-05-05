@@ -12,7 +12,7 @@ public class BaseStation : MonoBehaviour {
     	this.entrances = entrances;
     	this.height = height;
     	this.width = width;
-    	gridEnvironment = new GridEnvironment(height, width, 0.1f);
+    	gridEnvironment = new GridEnvironment(height, width, 1f);
 
     	Transform prefab = Resources.Load("Prefabs/Base", typeof(Transform)) as Transform;
     	GameObject.Instantiate (prefab, new Vector3(0,0,0), Quaternion.LookRotation (Vector3.up));
