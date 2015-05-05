@@ -4,33 +4,75 @@ using System.Collections.Generic;
 
 public class BaseStation : MonoBehaviour {
 
-	public GridEnvironment gridEnvironment;
 	public int height, width;
-    public List<Vector2> entrances;
+	public List<Vector2> entrances;
 
-	public BaseStation (List<Vector2> entrances, int height, int width) {
-    	this.entrances = entrances;
-    	this.height = height;
-    	this.width = width;
-    	gridEnvironment = new GridEnvironment(height, width, 1f);
+	public List<Agent> agents;
+	public List<Human> unrescuedHumans;
 
-    	Transform prefab = Resources.Load("Prefabs/Base", typeof(Transform)) as Transform;
-    	GameObject.Instantiate (prefab, new Vector3(0,0,0), Quaternion.LookRotation (Vector3.up));
-	}
-
-	// Use this for initialization
+	public GridEnvironment gridEnvironment;
+	
 	void Start () {
-	Debug.Log("START");
-
+		agents = new List<Agent> ();
+		unrescuedHumans = new List<Human> ();
+		gridEnvironment = new GridEnvironment(height, width, 0.1f);
 	}
 
-	// Update is called once per frame
+	/**
+	 * Decides which agent should go and rescue a certain human that is already
+	 * found by an agent
+	 */
 	void Update () {
 
+		List<Human> isBeingRescued = new List<Human> ();
+		foreach (Agent agent in agents) {
+			if (!agent.hasTarget()) {
+				continue;
+			}
+
+			Human target = agent.getCurrentTarget();
+			if (!isBeingRescued.Contains(target)) {
+				isBeingRescued.Add(target);
+			}
+		}
+
+		foreach (Agent agent in agents) {
+			
+			// TODO At the moment we let the agent pick up the current target if it has one,
+			// in the future, we might have action that overrides the current target if another 
+			// task with a higher priority is found.
+			if (agent.hasTarget()) {
+				continue;
+			}
+
+			foreach (Human unrescuedHuman in unrescuedHumans) {
+				if (!isBeingRescued.Contains(unrescuedHuman)) {
+					Debug.Log ("Assignning new target human from base station");
+					agent.assignTarget(unrescuedHuman);
+					isBeingRescued.Add(unrescuedHuman);
+				}
+			}
+		}
 	}
 
-	public void uploadTargetLocation(Vector2 loc) {
-        gridEnvironment.addHuman(loc);
+	public void uploadSavedTaret(Human human) {
+
+		if (!unrescuedHumans.Contains (human)) {
+			Debug.Log ("ERROR: Rescued unregistered human");
+			return;
+		}
+
+		unrescuedHumans.Remove (human);
+	}
+
+	public void uploadTargetLocation(Human human) {
+		if (!unrescuedHumans.Contains (human)) {
+			Debug.Log ("Found human at " + (Vector2) human.transform.position);
+			unrescuedHumans.Add (human);
+		}
+
+		Vector2 position = (Vector2) human.transform.position; // Cast to Vector2 from Vector3
+		gridEnvironment.addHuman(position);
 	}
 
 	// TODO how is this supposed to work? Should we maybe assume everything not identified is ground?
@@ -41,5 +83,8 @@ public class BaseStation : MonoBehaviour {
 	public void uploadObstacleLocation(Vector2 loc) {
 		gridEnvironment.addObstacle(loc);
 	}
-
+	
+	public void addAgent(Agent agent) {
+		agents.Add(agent);
+	}
 }

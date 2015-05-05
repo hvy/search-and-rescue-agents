@@ -12,16 +12,18 @@ public class Main : MonoBehaviour {
 	private int numAgents;
 	private Environment env = null;
 	private BaseStation baseStation;
-	private List<Agent> agents;
-
 	
 	void Start () {
 		Debug.Log ("Starting main...");
 
 		// Create the environment with the obstacles and the humans
 		env = EnvironmentFactory.createBasicEnvironment ();
-		agents = new List<Agent>();
-		baseStation = new BaseStation(env.entrances, env.height, env.width);
+
+		// TODO Hardcoded at the moment. Make the agents find the entrances instead;
+		baseStation = (BaseStation) GameObject.Find ("BaseStation").GetComponent(typeof(BaseStation));
+		baseStation.entrances = env.entrances;
+		//baseStation = new BaseStation(env.entrances, env.height, env.width);
+
 		Display.humans = env.humans.Count;
 	}
 
@@ -31,19 +33,14 @@ public class Main : MonoBehaviour {
 			if (Input.GetButtonDown ("Fire1")) {
 				Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-//				Debug.Log ("Spawning rescue agent at " + clickPos);
-
 				clickPos.z = 0;
 
+				// Create the agent and add a reference to the base station
 				Agent agent = AgentFactory.spawnAgentAt (clickPos);
 				agent.setBase(baseStation);
-				agents.Add(agent);
 
-			}
-			
-			// On Space bar click, start the rescue simulation
-			if (Input.GetKeyDown (KeyCode.Space)) {
-				Debug.Log("Starting simulation...");
+				// Register the agent in the base station
+				baseStation.addAgent(agent);
 			}
 		}
 	}

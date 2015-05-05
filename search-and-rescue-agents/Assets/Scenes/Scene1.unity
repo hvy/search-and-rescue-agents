@@ -28820,6 +28820,60 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 470658, guid: 1f25ffd51da644ea1add9dbfeb6d2f45, type: 2}
   m_PrefabInternal: {fileID: 544425427}
+--- !u!1001 &1604072303
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 440586, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 199502, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: m_Name
+      value: BaseStation
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465920, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: height
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465920, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+      propertyPath: width
+      value: 100
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 5c721d8d0121b4dfaa383c019d933caf, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &1607050615
 Prefab:
   m_ObjectHideFlags: 0
@@ -35777,6 +35831,8 @@ MonoBehaviour:
   height: 0
   width: 0
   entrances: []
+  agents: []
+  unrescuedHumans: []
 --- !u!1001 &2036058753
 Prefab:
   m_ObjectHideFlags: 0

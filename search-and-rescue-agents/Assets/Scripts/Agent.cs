@@ -10,7 +10,8 @@ public class Agent : MonoBehaviour {
 
     private bool carryingTarget; // Agent is carrying a target
     private bool insideEnvironment;
-    private Human currentTarget; // Target to rescue
+    private Human currentTarget = null; // Target to rescue
+
     public Vector2 goal; // current position to move toward
    	public Vector2 start;
 
@@ -19,7 +20,6 @@ public class Agent : MonoBehaviour {
 
     private System.Random rand;
     private long searchCount = 0;
-
 
 	// Use this for initialization
 	void Start () {
@@ -37,17 +37,18 @@ public class Agent : MonoBehaviour {
 		insideEnvironment = isInsideEnvironment();
 
 		if (carryingTarget)
-		    moveToEntrance();
+			moveToEntrance ();
 		else if (currentTarget != null && !currentTarget.saved)
-		    moveToTarget();
-		else
-		    search();
+			moveToTarget ();
+		else 
+			search ();
+		    
 		Debug.DrawLine(transform.position, goal, Color.white);
-
 	}
+
 	void OnDrawGizmos() {
 		Gizmos.color = Color.white;
-//        Gizmos.DrawWireSphere(transform.position, 4.0f);
+		Gizmos.DrawWireSphere(transform.position, 4.0f);
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
@@ -78,8 +79,26 @@ public class Agent : MonoBehaviour {
 
     }
 
+	/**
+	 * Assign a target to this agent. This is decided by the base station.
+	 */
+	public void assignTarget(Human target) {
+		currentTarget = target;
+	}
+
     private void move (Vector2 g) {
     	collisionAvoidance(g);
+	}
+
+	public bool hasTarget() {
+		if (currentTarget != null) 
+			return true;
+		else
+			return false;
+	}
+
+	public Human getCurrentTarget() {
+		return currentTarget;
 	}
 
     private void search() {
@@ -106,6 +125,9 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void putDownTarget() {
+
+		baseStation.uploadSavedTaret (currentTarget);
+
 		gameObject.GetComponent<Renderer>().material.color = Color.blue;
 		currentTarget.transform.position = transform.position;
       	currentTarget.gameObject.SetActive(true);
@@ -118,13 +140,11 @@ public class Agent : MonoBehaviour {
 		Vector2 pos = other.transform.position;
 		string name = other.name;
 		if (name == "obstacle")
-			baseStation.uploadObstacleLocation(pos);
-		else if (name == "human")
-			baseStation.uploadTargetLocation(pos);
-//		else if (name == "human")
-//        	baseStation.uploadTargetLocation(pos);
-		// FIXME send data to Base
-
+			baseStation.uploadObstacleLocation (pos);
+		else if (name == "human") {
+			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
+			baseStation.uploadTargetLocation(human);
+		}
 	}
 
 	private void moveToEntrance() {
@@ -139,7 +159,6 @@ public class Agent : MonoBehaviour {
 		if (Vector2.Distance(transform.position, closestEntrance()) < 0.5f) {
 			putDownTarget();
 		}
-
 	}
 
 	private void moveToTarget() {
@@ -203,7 +222,6 @@ public class Agent : MonoBehaviour {
         transform.position += posDiff;
 
         return avoiding;
-
 	}
 
 	private Vector2 closestEntrance() {
@@ -219,11 +237,6 @@ public class Agent : MonoBehaviour {
 		return baseStation.entrances[index];
 	}
 
-	// Assign a target to this agent. Should be decided by the Base.
-	public void assignTarget(Human target) {
-		//currentTarget = human;
-	}
-
 	public void setBase(BaseStation baseStation) {
 		this.baseStation = baseStation;
 	}
@@ -233,5 +246,4 @@ public class Agent : MonoBehaviour {
 			return true;
 		return false;
 	}
-
 }
