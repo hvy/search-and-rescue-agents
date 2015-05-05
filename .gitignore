@@ -36,7 +36,6 @@ a2/a2.sln
 
 /a3/team1/.idea
 
-*.meta
 *.name
 *.xml
 *.iml
