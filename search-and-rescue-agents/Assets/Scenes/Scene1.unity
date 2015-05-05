@@ -12810,6 +12810,10 @@ Prefab:
       propertyPath: m_Name
       value: obstacle
       objectReference: {fileID: 0}
+    - target: {fileID: 470658, guid: 1f25ffd51da644ea1add9dbfeb6d2f45, type: 2}
+      propertyPath: m_LocalScale.y
+      value: .0999999568
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1f25ffd51da644ea1add9dbfeb6d2f45, type: 2}
   m_IsPrefabParent: 0
