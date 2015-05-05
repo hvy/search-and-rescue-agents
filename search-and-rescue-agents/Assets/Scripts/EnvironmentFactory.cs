@@ -196,6 +196,24 @@ public class EnvironmentFactory {
 		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (7,2)));
 		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-2,10)));
 
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (26,0)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (26,27)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (2,27)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (2,7)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-23,7)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-23,-27)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-2,-27)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (25,-27)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (35,-27)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (35,-44)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-23,-44)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-23,30)));
+
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-37,21)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-39,42)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-39,-10)));
+		humans.Add(HumanFactory.spawnHumanAt(new Vector2 (-39,-42)));
+
 
 		Environment env = new Environment (height, width, humans, entrances, obstacles);
 
