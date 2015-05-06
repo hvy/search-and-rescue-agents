@@ -9,21 +9,33 @@ using System.Collections.Generic;
  */
 public class Main : MonoBehaviour {
 
+	public Vector2 environmentPosition;
 	public float tileSize; // Set in inspector
 	public int height, width; // Set in inspector
 
 	private BaseStation baseStation;
 	
 	void Start () {
+
 		Debug.Log ("Starting main...");
 
-		// Create the environment with the obstacles and the humans
-		Environment env = EnvironmentFactory.createBasicEnvironment ();
+		//Environment env = EnvironmentFactory.createBasicEnvironment ();
+
+		// TODO Hardcoded entrances
+		List<Vector2> entrances = new List<Vector2> ();
+		entrances.Add (new Vector2(0, 10));
+		entrances.Add (new Vector2(1, 10));
+		entrances.Add (new Vector2(-2, -10));
+		entrances.Add (new Vector2(-1, -10));
+
+		baseStation = (BaseStation) GameObject.Find ("BaseStation").GetComponent(typeof(BaseStation));
+
+		baseStation.entrances = entrances; // TODO Make sure entrances can be found by the agents
+
+		baseStation.setEnvironmentPos (environmentPosition);
+
 		GridEnvironment gridEnv = new GridEnvironment(height, width, tileSize);
 
-		// TODO Hardcoded at the moment. Make the agents find the entrances instead;
-		baseStation = (BaseStation) GameObject.Find ("BaseStation").GetComponent(typeof(BaseStation));
-		baseStation.entrances = env.entrances; // TODO Make sure entrances can be found by the agents
 		baseStation.setGridEnvironment (gridEnv);
 	}
 

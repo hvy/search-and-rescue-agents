@@ -210,6 +210,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f94c2472705ba4468b637920c70a315a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileSize: .100000001
+  height: 30
+  width: 20
 --- !u!1 &638196810
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,8 +636,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d8d6fd4ade6e41f7983e9809bd9c3e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 0
-  width: 0
   entrances: []
   agents: []
   unrescuedHumans: []

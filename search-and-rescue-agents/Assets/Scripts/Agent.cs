@@ -33,10 +33,10 @@ public class Agent : MonoBehaviour {
 			moveToEntrance ();
 		else if (currentTarget != null && !currentTarget.saved)
 			moveToTarget ();
-		else if (isInsideEnvironment())
+		else if (isInsideEnvironment ()) {
 			searchForTargets ();
-		else
-			searchForEntrance ();
+		} else
+			moveTowardsEnvironment ();
 		    
 		Debug.DrawLine(transform.position, goal, Color.white); // Debug
 	}
@@ -53,18 +53,52 @@ public class Agent : MonoBehaviour {
 
     void OnTriggerStay2D(Collider2D other) {
 
-        if (other.name == "human") {
-        
-			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
+		//if (isInsideEnvironment ()) {
 
-			// Only save humans who are 
-			// 1. not already saved
-			// 2. is assignment to this agent by the base station
-			// 3. is close enough to this agent
-			if (!human.saved && currentTarget == human && Vector3.Distance(transform.position, other.transform.position) < 0.1f) {
-				pickUpTarget(other);
-            }
-        }
+			if (other.tag == "Human") {
+				Human human = (Human) other.gameObject.GetComponent(typeof(Human));
+				
+				// Only save humans who are 
+				// 1. not already saved
+				// 2. is assignment to this agent by the base station
+				// 3. is close enough to this agent
+				if (!human.saved && currentTarget == human && Vector3.Distance(transform.position, other.transform.position) < 0.3f) {
+					pickUpTarget(other);
+				}
+
+			
+			}
+
+		//} else {
+
+			/*
+			if (other.tag == "Empty") {
+
+				Debug.Log ("Found entrance: " + (Vector2) other.transform.position);
+
+				goal = other.transform.position;
+
+			} else if (other.tag == "Obstacle") { // Not inside yet but found the environment
+				
+				Vector2 nextPosition = other.transform.position;
+				Vector2 obstacleDirection = other.transform.position - this.transform.position;
+
+				Debug.Log (obstacleDirection);
+
+				if (obstacleDirection.x < 0 && obstacleDirection.y < 0) {
+
+				} else if (obstacleDirection.x > 0 && obstacleDirection.y > 0) {
+
+				} else if (obstacleDirection.x < 0 && obstacleDirection.y > 0) {
+					nextPosition.x += 1;
+				} else if (obstacleDirection.x > 0 && obstacleDirection.y < 0) {
+				
+				}
+
+				goal = nextPosition;
+			}
+			*/
+		//}
     }
 
 	/**
@@ -107,7 +141,7 @@ public class Agent : MonoBehaviour {
 		int h = rand.Next((int)-baseStation.getGridEnvironment().getWidth()/2, (int)baseStation.getGridEnvironment().getWidth()/2);
 		int w = rand.Next((int)-baseStation.getGridEnvironment().getHeight()/2, (int)baseStation.getGridEnvironment().getHeight()/2);
 
-		if (searchCount > 100) {
+		if (searchCount > 50) {
 			goal = new Vector2(h,w);
 			searchCount = 0;
         }
@@ -116,14 +150,9 @@ public class Agent : MonoBehaviour {
 		searchCount++;
     }
 
-	private void searchForEntrance() {
-		// TODO 
-		// 1. If agent is close to a wall, move alongside the wall to find an entrance (clockwise or anti clockwise)
-		// 2. If agent is not close to a wall, move randomly, or move towards the environment if that information is available
-
+	private void moveTowardsEnvironment() {
 		move(closestEntrance());
-
-
+		//move (baseStation.getEnvironmentPos ());
 	}
 
 	private void pickUpTarget(Collider2D human) {
@@ -158,15 +187,21 @@ public class Agent : MonoBehaviour {
 	 */
 	private void sendEnvironmentData(Collider2D other) {
 
-		switch (other.name) {
+		switch (other.tag) {
 
-		case "obstacle":
+		case "Empty":
+
+			// TODO Send this data to the base station
+
+			break;
+
+		case "Obstacle":
 
 			baseStation.uploadObstacleLocation (other.transform.position);
 			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
 			break;
 
-		case "human":
+		case "Human":
 
 			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
 			if (!human.saved)
@@ -186,6 +221,7 @@ public class Agent : MonoBehaviour {
 		} else {
         	goal = closestEntrance();
 		}
+
 		move(goal);
 
 		if (Vector2.Distance(transform.position, closestEntrance()) < 0.5f) {
@@ -194,12 +230,14 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void moveToTarget() {
+
 		if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
 			goal = path[0].getPos();
 			path.RemoveAt(0);
 		} else {
 			goal = currentTarget.transform.position;
 		}
+
 		move(goal);
 	}
 
@@ -269,12 +307,18 @@ public class Agent : MonoBehaviour {
 		return baseStation.entrances[index];
 	}
 
+	/* 
+	 * TODO At the moment this method assumes that the environment is a square. 
+	 * Make sure it works for other environments.
+	 */
 	private bool isInsideEnvironment() {
-		if (transform.position.x >= -baseStation.getGridEnvironment().getWidth()/2-0.3f && 
-		    transform.position.x <= baseStation.getGridEnvironment().getWidth()/2+0.3f && 
-		    transform.position.y <= baseStation.getGridEnvironment().getHeight()/2+0.3f && 
-		    transform.position.y >= -baseStation.getGridEnvironment().getHeight()/2-0.3f)
+		if (transform.position.x >= -baseStation.getGridEnvironment ().getWidth () / 2 - 0.3f && 
+			transform.position.x <= baseStation.getGridEnvironment ().getWidth () / 2 + 0.3f && 
+			transform.position.y <= baseStation.getGridEnvironment ().getHeight () / 2 + 0.3f && 
+			transform.position.y >= -baseStation.getGridEnvironment ().getHeight () / 2 - 0.3f) {
 			return true;
-		return false;
+		} else {
+			return false;
+		}
 	}
 }

@@ -8,6 +8,7 @@ public class BaseStation : MonoBehaviour {
 	public List<Agent> agents;
 	public List<Human> unrescuedHumans;
 	private GridEnvironment gridEnv = null;
+	private Vector2 environmentPosition;
 	
 	void Start () {
 		agents = new List<Agent> ();
@@ -60,6 +61,14 @@ public class BaseStation : MonoBehaviour {
 
 	public GridEnvironment getGridEnvironment() {
 		return gridEnv;
+	}
+
+	public void setEnvironmentPos(Vector2 environmentPosition) {
+		this.environmentPosition = environmentPosition;
+	}
+
+	public Vector2 getEnvironmentPos() {
+		return environmentPosition;
 	}
 
 	public void uploadSavedTarget(Human human) {
