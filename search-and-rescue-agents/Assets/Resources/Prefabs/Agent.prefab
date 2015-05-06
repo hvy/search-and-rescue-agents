@@ -59,7 +59,7 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 143084}
-  m_Mass: 1
+  m_Mass: 9.99999975e-05
   m_LinearDrag: 0
   m_AngularDrag: .0500000007
   m_GravityScale: 0
@@ -93,7 +93,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: .550000012
+  m_Radius: .5
 --- !u!114 &11454060
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -105,9 +105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73bbc2ade83d2472cad8f01f6c1cb3a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 5
-  rotationSpeed: 4
-  collisionDistance: 3
+  velocity: 4
+  rotationSpeed: 6
+  collisionDistance: .100000001
   goal: {x: 0, y: 0}
   start: {x: 0, y: 0}
 --- !u!222 &22276604

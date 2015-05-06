@@ -31,12 +31,13 @@ public class Agent : MonoBehaviour {
 
 		if (carryingTarget)
 			moveToEntrance ();
+		else if (!isInsideEnvironment())
+			moveTowardsEnvironment ();
 		else if (currentTarget != null && !currentTarget.saved)
 			moveToTarget ();
-		else if (isInsideEnvironment ()) {
+		else
 			searchForTargets ();
-		} else
-			moveTowardsEnvironment ();
+		
 		    
 		Debug.DrawLine(transform.position, goal, Color.white); // Debug
 	}
@@ -151,8 +152,8 @@ public class Agent : MonoBehaviour {
     }
 
 	private void moveTowardsEnvironment() {
-		move(closestEntrance());
-		//move (baseStation.getEnvironmentPos ());
+		goal = closestEntrance();
+		move (goal);
 	}
 
 	private void pickUpTarget(Collider2D human) {
@@ -203,6 +204,15 @@ public class Agent : MonoBehaviour {
 
 		case "Human":
 
+			RaycastHit2D hit;
+
+			int layerMask = 1 << 8;
+			// This would cast rays only against colliders in layer 8, so we just inverse the mask.
+			layerMask = ~layerMask;
+			hit = Physics2D.Raycast(transform.position, (other.transform.position-transform.position).normalized, Vector2.Distance (transform.position, other.transform.position)-1f, layerMask);
+			if (hit.collider != null && hit.collider.tag == "Obstacle") {
+				break;
+			}
 			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
 			if (!human.saved)
 				baseStation.uploadTargetLocation(human);
@@ -247,7 +257,7 @@ public class Agent : MonoBehaviour {
 		Vector2 position = (Vector2) transform.position;
 		Vector2 dir = (goal - position).normalized;
 
-		float distToObstacle = collisionDistance*Vector3.Distance(position, goal)/10f;
+		float distToObstacle = collisionDistance;//*Vector3.Distance(position, goal)/10f;
 
 		// Bit shift the index of the layer (8) to get a bit mask
         int layerMask = 1 << 8;
