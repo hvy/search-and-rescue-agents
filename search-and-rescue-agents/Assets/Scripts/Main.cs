@@ -9,39 +9,49 @@ using System.Collections.Generic;
  */
 public class Main : MonoBehaviour {
 
-	private int numAgents;
-	private Environment env = null;
+	public Vector2 environmentPosition;
+	public float tileSize; // Set in inspector
+	public int height, width; // Set in inspector
+
 	private BaseStation baseStation;
 	
 	void Start () {
+
 		Debug.Log ("Starting main...");
 
-		// Create the environment with the obstacles and the humans
-		env = EnvironmentFactory.createBasicEnvironment ();
+		//Environment env = EnvironmentFactory.createBasicEnvironment ();
 
-		// TODO Hardcoded at the moment. Make the agents find the entrances instead;
+		// TODO Hardcoded entrances
+		List<Vector2> entrances = new List<Vector2> ();
+		entrances.Add (new Vector2(0, 10));
+		entrances.Add (new Vector2(1, 10));
+		entrances.Add (new Vector2(-2, -10));
+		entrances.Add (new Vector2(-1, -10));
+
 		baseStation = (BaseStation) GameObject.Find ("BaseStation").GetComponent(typeof(BaseStation));
-		baseStation.entrances = env.entrances;
-		//baseStation = new BaseStation(env.entrances, env.height, env.width);
 
-		Display.humans = env.humans.Count;
+		baseStation.entrances = entrances; // TODO Make sure entrances can be found by the agents
+
+		baseStation.setEnvironmentPos (environmentPosition);
+
+		GridEnvironment gridEnv = new GridEnvironment(height, width, tileSize);
+
+		baseStation.setGridEnvironment (gridEnv);
 	}
 
 	void Update () {
-		if (env != null) {
-			// On mouse click, create a rescue agent
-			if (Input.GetButtonDown ("Fire1")) {
-				Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		// On mouse click, create a rescue agent
+		if (Input.GetButtonDown ("Fire1")) {
+			Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-				clickPos.z = 0;
+			clickPos.z = 0;
 
-				// Create the agent and add a reference to the base station
-				Agent agent = AgentFactory.spawnAgentAt (clickPos);
-				agent.setBase(baseStation);
+			// Create the agent and add a reference to the base station
+			Agent agent = AgentFactory.spawnAgentAt (clickPos);
+			agent.setBase(baseStation);
 
-				// Register the agent in the base station
-				baseStation.addAgent(agent);
-			}
+			// Register the agent in the base station
+			baseStation.addAgent(agent);
 		}
 	}
 }

@@ -7,24 +7,19 @@ public class Agent : MonoBehaviour {
 	public float velocity;
 	public float rotationSpeed;
 	public float collisionDistance;
+	public Vector2 goal; // current position to move toward
+	public Vector2 start;
 
+	private System.Random rand;
+	private BaseStation baseStation;
     private bool carryingTarget; // Agent is carrying a target
-    private bool insideEnvironment;
     private Human currentTarget = null; // Target to rescue
-
-    public Vector2 goal; // current position to move toward
-   	public Vector2 start;
-
-   	private BaseStation baseStation;
-    private List<GNode> path; // path to current goal (if exists)
-
-    private System.Random rand;
-    private long searchCount = 0;
-
+	private long searchCount = 0;
+	private List<GNode> path; // path to current goal (if exists)
+	
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
-    	insideEnvironment = false;
     	path = new List<GNode>();
     	start = transform.position;
     	rand = new System.Random();
@@ -33,17 +28,17 @@ public class Agent : MonoBehaviour {
 
 	// Update is called once per fr	ame
 	void Update () {
-		// FIXME
-		insideEnvironment = isInsideEnvironment();
 
 		if (carryingTarget)
 			moveToEntrance ();
 		else if (currentTarget != null && !currentTarget.saved)
 			moveToTarget ();
-		else 
-			search ();
+		else if (isInsideEnvironment ()) {
+			searchForTargets ();
+		} else
+			moveTowardsEnvironment ();
 		    
-		Debug.DrawLine(transform.position, goal, Color.white);
+		Debug.DrawLine(transform.position, goal, Color.white); // Debug
 	}
 
 	void OnDrawGizmos() {
@@ -52,31 +47,58 @@ public class Agent : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
-    	// TODO, collect information. This trigger will find humans and obstacles.
+    	// Collect information. This trigger will find humans and obstacles.
 		sendEnvironmentData(other);
-
-		// Found human
-		if (other.name == "human") {
-        	other.gameObject.GetComponent<Renderer>().material.color = Color.green;
-		}
-
     }
 
     void OnTriggerStay2D(Collider2D other) {
-        if (other.name == "human") {
-        	// Only save humans who are not already saved and close.
-        	Human human = (Human) other.gameObject.GetComponent(typeof(Human));
-        	if (!carryingTarget)
-        		currentTarget = human;
-            if (Vector3.Distance(transform.position, other.transform.position) < 0.1f && !human.saved) {
-				pickUpTarget(other);
-            }
-        }
 
-        if (other.name == "obstacle") {
-        	other.gameObject.GetComponent<Renderer>().material.color = Color.green;
-        }
+		//if (isInsideEnvironment ()) {
 
+			if (other.tag == "Human") {
+				Human human = (Human) other.gameObject.GetComponent(typeof(Human));
+				
+				// Only save humans who are 
+				// 1. not already saved
+				// 2. is assignment to this agent by the base station
+				// 3. is close enough to this agent
+				if (!human.saved && currentTarget == human && Vector3.Distance(transform.position, other.transform.position) < 0.3f) {
+					pickUpTarget(other);
+				}
+
+			
+			}
+
+		//} else {
+
+			/*
+			if (other.tag == "Empty") {
+
+				Debug.Log ("Found entrance: " + (Vector2) other.transform.position);
+
+				goal = other.transform.position;
+
+			} else if (other.tag == "Obstacle") { // Not inside yet but found the environment
+				
+				Vector2 nextPosition = other.transform.position;
+				Vector2 obstacleDirection = other.transform.position - this.transform.position;
+
+				Debug.Log (obstacleDirection);
+
+				if (obstacleDirection.x < 0 && obstacleDirection.y < 0) {
+
+				} else if (obstacleDirection.x > 0 && obstacleDirection.y > 0) {
+
+				} else if (obstacleDirection.x < 0 && obstacleDirection.y > 0) {
+					nextPosition.x += 1;
+				} else if (obstacleDirection.x > 0 && obstacleDirection.y < 0) {
+				
+				}
+
+				goal = nextPosition;
+			}
+			*/
+		//}
     }
 
 	/**
@@ -86,38 +108,58 @@ public class Agent : MonoBehaviour {
 		currentTarget = target;
 	}
 
-    private void move (Vector2 g) {
-    	collisionAvoidance(g);
+	public void setBase(BaseStation baseStation) {
+		this.baseStation = baseStation;
 	}
-
+	
+	public bool isCarryingTarget() {
+		return carryingTarget;
+	}
+	
+	public bool isMovingToTarget() {
+		return !isCarryingTarget() && currentTarget != null;
+	}
+	
 	public bool hasTarget() {
-		if (currentTarget != null) 
-			return true;
-		else
-			return false;
+		return currentTarget != null;
 	}
-
+	
 	public Human getCurrentTarget() {
 		return currentTarget;
 	}
 
-    private void search() {
-    	if (!insideEnvironment)
-    		move(closestEntrance());
-    	else {
-    		int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
-    		int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
-            if (searchCount > 100) {
-    			goal = new Vector2(h,w);
-    			searchCount = 0;
-            }
-    		move(goal);
-    		searchCount++;
-    	}
+	private void move (Vector2 g) {
+		collisionAvoidance(g);
+	}
+
+    private void searchForTargets() {
+
+		// TODO Use flood fill algorithm
+    	
+		//int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
+		//int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
+		int h = rand.Next((int)-baseStation.getGridEnvironment().getWidth()/2, (int)baseStation.getGridEnvironment().getWidth()/2);
+		int w = rand.Next((int)-baseStation.getGridEnvironment().getHeight()/2, (int)baseStation.getGridEnvironment().getHeight()/2);
+
+		if (searchCount > 50) {
+			goal = new Vector2(h,w);
+			searchCount = 0;
+        }
+
+		move(goal);
+		searchCount++;
     }
 
+	private void moveTowardsEnvironment() {
+		move(closestEntrance());
+		//move (baseStation.getEnvironmentPos ());
+	}
+
 	private void pickUpTarget(Collider2D human) {
-		gameObject.GetComponent<Renderer>().material.color = Color.white;
+
+		Debug.Log ("Picking up target at " + (Vector2) human.transform.position); // Debug
+		gameObject.GetComponent<Renderer>().material.color = Color.white; // Debug
+
 		human.gameObject.SetActive(false);
 
         currentTarget.saved = true;
@@ -126,24 +168,49 @@ public class Agent : MonoBehaviour {
 
 	private void putDownTarget() {
 
-		baseStation.uploadSavedTaret (currentTarget);
+		Debug.Log ("Saved Human!"); // Debug
+		gameObject.GetComponent<Renderer>().material.color = Color.blue; // Debug
 
-		gameObject.GetComponent<Renderer>().material.color = Color.blue;
+		baseStation.uploadSavedTarget (currentTarget);
+
 		currentTarget.transform.position = transform.position;
       	currentTarget.gameObject.SetActive(true);
-      	carryingTarget = false;
-      	currentTarget = null;
+      	
+		currentTarget = null;
+		carryingTarget = false;
+      	
       	Display.currentRescued++;
     }
 
+	/* 
+	 * Send environment data to the base station
+	 */
 	private void sendEnvironmentData(Collider2D other) {
-		Vector2 pos = other.transform.position;
-		string name = other.name;
-		if (name == "obstacle")
-			baseStation.uploadObstacleLocation (pos);
-		else if (name == "human") {
+
+		switch (other.tag) {
+
+		case "Empty":
+
+			// TODO Send this data to the base station
+
+			break;
+
+		case "Obstacle":
+
+			baseStation.uploadObstacleLocation (other.transform.position);
+			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
+			break;
+
+		case "Human":
+
 			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
-			baseStation.uploadTargetLocation(human);
+			if (!human.saved)
+				baseStation.uploadTargetLocation(human);
+			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
+			break;
+
+		default:
+			break;
 		}
 	}
 
@@ -154,6 +221,7 @@ public class Agent : MonoBehaviour {
 		} else {
         	goal = closestEntrance();
 		}
+
 		move(goal);
 
 		if (Vector2.Distance(transform.position, closestEntrance()) < 0.5f) {
@@ -162,12 +230,14 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void moveToTarget() {
+
 		if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
 			goal = path[0].getPos();
 			path.RemoveAt(0);
 		} else {
 			goal = currentTarget.transform.position;
 		}
+
 		move(goal);
 	}
 
@@ -229,21 +299,26 @@ public class Agent : MonoBehaviour {
 		float closest = 1000000f;
 		for (int i = 0; i < baseStation.entrances.Count; i++) {
 			float dist = Vector2.Distance(baseStation.entrances[i], transform.position);
-             if (dist < closest) {
-             	closest = dist;
-             	index = i;
-             }
+			if (dist < closest) {
+				closest = dist;
+				index = i;
+			}
 		}
 		return baseStation.entrances[index];
 	}
 
-	public void setBase(BaseStation baseStation) {
-		this.baseStation = baseStation;
-	}
-
+	/* 
+	 * TODO At the moment this method assumes that the environment is a square. 
+	 * Make sure it works for other environments.
+	 */
 	private bool isInsideEnvironment() {
-		if (transform.position.x >= -baseStation.width/2-0.3f && transform.position.x <= baseStation.width/2+0.3f && transform.position.y <= baseStation.height/2+0.3f && transform.position.y >= -baseStation.height/2-0.3f)
+		if (transform.position.x >= -baseStation.getGridEnvironment ().getWidth () / 2 - 0.3f && 
+			transform.position.x <= baseStation.getGridEnvironment ().getWidth () / 2 + 0.3f && 
+			transform.position.y <= baseStation.getGridEnvironment ().getHeight () / 2 + 0.3f && 
+			transform.position.y >= -baseStation.getGridEnvironment ().getHeight () / 2 - 0.3f) {
 			return true;
-		return false;
+		} else {
+			return false;
+		}
 	}
 }

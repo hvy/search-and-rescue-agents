@@ -4,18 +4,15 @@ using System.Collections.Generic;
 
 public class BaseStation : MonoBehaviour {
 
-	public int height, width;
 	public List<Vector2> entrances;
-
 	public List<Agent> agents;
 	public List<Human> unrescuedHumans;
-
-	public GridEnvironment gridEnvironment;
+	private GridEnvironment gridEnv = null;
+	private Vector2 environmentPosition;
 	
 	void Start () {
 		agents = new List<Agent> ();
 		unrescuedHumans = new List<Human> ();
-		gridEnvironment = new GridEnvironment(height, width, 0.1f);
 	}
 
 	/**
@@ -24,15 +21,14 @@ public class BaseStation : MonoBehaviour {
 	 */
 	void Update () {
 
-		List<Human> isBeingRescued = new List<Human> ();
-		foreach (Agent agent in agents) {
-			if (!agent.hasTarget()) {
-				continue;
-			}
+		List<Human> humansBeingRescued = new List<Human> ();
 
-			Human target = agent.getCurrentTarget();
-			if (!isBeingRescued.Contains(target)) {
-				isBeingRescued.Add(target);
+		foreach (Agent agent in agents) {
+			if (agent.isMovingToTarget() || agent.isCarryingTarget()) {
+				Human target = agent.getCurrentTarget();
+				if (!humansBeingRescued.Contains(target)) {
+					humansBeingRescued.Add(target);
+				}
 			}
 		}
 
@@ -46,19 +42,39 @@ public class BaseStation : MonoBehaviour {
 			}
 
 			foreach (Human unrescuedHuman in unrescuedHumans) {
-				if (!isBeingRescued.Contains(unrescuedHuman)) {
-					Debug.Log ("Assignning new target human from base station");
+				if (!humansBeingRescued.Contains(unrescuedHuman)) {
+
+					Debug.Log ("Assignning new target human from base station at " + (Vector2) unrescuedHuman.transform.position);
+
 					agent.assignTarget(unrescuedHuman);
-					isBeingRescued.Add(unrescuedHuman);
+					humansBeingRescued.Add(unrescuedHuman);
+
+					break;
 				}
 			}
 		}
 	}
 
-	public void uploadSavedTaret(Human human) {
+	public void setGridEnvironment(GridEnvironment gridEnv) {
+		this.gridEnv = gridEnv;
+	}
+
+	public GridEnvironment getGridEnvironment() {
+		return gridEnv;
+	}
+
+	public void setEnvironmentPos(Vector2 environmentPosition) {
+		this.environmentPosition = environmentPosition;
+	}
+
+	public Vector2 getEnvironmentPos() {
+		return environmentPosition;
+	}
+
+	public void uploadSavedTarget(Human human) {
 
 		if (!unrescuedHumans.Contains (human)) {
-			Debug.Log ("ERROR: Rescued unregistered human");
+			Debug.Log ("ERROR! Rescued unregistered human");
 			return;
 		}
 
@@ -72,16 +88,16 @@ public class BaseStation : MonoBehaviour {
 		}
 
 		Vector2 position = (Vector2) human.transform.position; // Cast to Vector2 from Vector3
-		gridEnvironment.addHuman(position);
+		gridEnv.addHuman(position);
 	}
 
 	// TODO how is this supposed to work? Should we maybe assume everything not identified is ground?
 	public void uploadGroundLocation(Vector2 loc) {
-		gridEnvironment.addGround(loc);
+		gridEnv.addGround(loc);
 	}
 
 	public void uploadObstacleLocation(Vector2 loc) {
-		gridEnvironment.addObstacle(loc);
+		gridEnv.addObstacle(loc);
 	}
 	
 	public void addAgent(Agent agent) {
