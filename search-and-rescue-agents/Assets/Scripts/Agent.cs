@@ -7,24 +7,19 @@ public class Agent : MonoBehaviour {
 	public float velocity;
 	public float rotationSpeed;
 	public float collisionDistance;
+	public Vector2 goal; // current position to move toward
+	public Vector2 start;
 
+	private System.Random rand;
+	private BaseStation baseStation;
     private bool carryingTarget; // Agent is carrying a target
-    private bool insideEnvironment;
     private Human currentTarget = null; // Target to rescue
-
-    public Vector2 goal; // current position to move toward
-   	public Vector2 start;
-
-   	private BaseStation baseStation;
-    private List<GNode> path; // path to current goal (if exists)
-
-    private System.Random rand;
-    private long searchCount = 0;
-
+	private long searchCount = 0;
+	private List<GNode> path; // path to current goal (if exists)
+	
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
-    	insideEnvironment = false;
     	path = new List<GNode>();
     	start = transform.position;
     	rand = new System.Random();
@@ -33,17 +28,17 @@ public class Agent : MonoBehaviour {
 
 	// Update is called once per fr	ame
 	void Update () {
-		// FIXME
-		insideEnvironment = isInsideEnvironment();
 
 		if (carryingTarget)
 			moveToEntrance ();
 		else if (currentTarget != null && !currentTarget.saved)
 			moveToTarget ();
-		else 
-			search ();
+		else if (isInsideEnvironment())
+			searchForTargets ();
+		else
+			searchForEntrance ();
 		    
-		Debug.DrawLine(transform.position, goal, Color.white);
+		Debug.DrawLine(transform.position, goal, Color.white); // Debug
 	}
 
 	void OnDrawGizmos() {
@@ -54,38 +49,22 @@ public class Agent : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
     	// Collect information. This trigger will find humans and obstacles.
 		sendEnvironmentData(other);
-
-		// Found human
-		if (other.name == "human") {
-        	other.gameObject.GetComponent<Renderer>().material.color = Color.green;
-		}
     }
 
     void OnTriggerStay2D(Collider2D other) {
 
         if (other.name == "human") {
-        	// Only save humans who are not already saved and close.
-        	
+        
 			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
 
-			/*
-			if (!carryingTarget && human == currentTarget) {
-
-				Debug.Log ("Picking up human " + (Vector2) human.transform.position);
-
-				currentTarget = human;
-			}
-        	*/
-
+			// Only save humans who are 
+			// 1. not already saved
+			// 2. is assignment to this agent by the base station
+			// 3. is close enough to this agent
 			if (!human.saved && currentTarget == human && Vector3.Distance(transform.position, other.transform.position) < 0.1f) {
 				pickUpTarget(other);
             }
         }
-
-        if (other.name == "obstacle") {
-        	other.gameObject.GetComponent<Renderer>().material.color = Color.green;
-        }
-
     }
 
 	/**
@@ -95,34 +74,59 @@ public class Agent : MonoBehaviour {
 		currentTarget = target;
 	}
 
-    private void move (Vector2 g) {
-    	collisionAvoidance(g);
+	public void setBase(BaseStation baseStation) {
+		this.baseStation = baseStation;
 	}
-
+	
+	public bool isCarryingTarget() {
+		return carryingTarget;
+	}
+	
+	public bool isMovingToTarget() {
+		return !isCarryingTarget() && currentTarget != null;
+	}
+	
+	public bool hasTarget() {
+		return currentTarget != null;
+	}
+	
 	public Human getCurrentTarget() {
 		return currentTarget;
 	}
 
-    private void search() {
-    	if (!insideEnvironment)
-    		move(closestEntrance());
-    	else {
-    		int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
-    		int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
-            if (searchCount > 100) {
-    			goal = new Vector2(h,w);
-    			searchCount = 0;
-            }
-    		move(goal);
-    		searchCount++;
-    	}
+	private void move (Vector2 g) {
+		collisionAvoidance(g);
+	}
+
+    private void searchForTargets() {
+    	
+		int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
+		int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
+        
+		if (searchCount > 100) {
+			goal = new Vector2(h,w);
+			searchCount = 0;
+        }
+
+		move(goal);
+		searchCount++;
     }
+
+	private void searchForEntrance() {
+		// TODO 
+		// 1. If agent is close to a wall, move alongside the wall to find an entrance (clockwise or anti clockwise)
+		// 2. If agent is not close to a wall, move randomly, or move towards the environment if that information is available
+
+		move(closestEntrance());
+
+
+	}
 
 	private void pickUpTarget(Collider2D human) {
 
-		Debug.Log ("Picking up target at " + (Vector2) human.transform.position);
+		Debug.Log ("Picking up target at " + (Vector2) human.transform.position); // Debug
+		gameObject.GetComponent<Renderer>().material.color = Color.white; // Debug
 
-		gameObject.GetComponent<Renderer>().material.color = Color.white;
 		human.gameObject.SetActive(false);
 
         currentTarget.saved = true;
@@ -131,11 +135,11 @@ public class Agent : MonoBehaviour {
 
 	private void putDownTarget() {
 
-		Debug.Log ("Saved Human!");
+		Debug.Log ("Saved Human!"); // Debug
+		gameObject.GetComponent<Renderer>().material.color = Color.blue; // Debug
 
 		baseStation.uploadSavedTarget (currentTarget);
 
-		gameObject.GetComponent<Renderer>().material.color = Color.blue;
 		currentTarget.transform.position = transform.position;
       	currentTarget.gameObject.SetActive(true);
       	
@@ -145,16 +149,29 @@ public class Agent : MonoBehaviour {
       	Display.currentRescued++;
     }
 
+	/* 
+	 * Send environment data to the base station
+	 */
 	private void sendEnvironmentData(Collider2D other) {
-		Vector2 pos = other.transform.position;
-		string name = other.name;
-		if (name == "obstacle")
-			baseStation.uploadObstacleLocation (pos);
-		else if (name == "human") {
+
+		switch (other.name) {
+
+		case "obstacle":
+
+			baseStation.uploadObstacleLocation (other.transform.position);
+			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
+			break;
+
+		case "human":
+
 			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
-			if (!human.saved) {
+			if (!human.saved)
 				baseStation.uploadTargetLocation(human);
-			}
+			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
+			break;
+
+		default:
+			break;
 		}
 	}
 
@@ -240,28 +257,12 @@ public class Agent : MonoBehaviour {
 		float closest = 1000000f;
 		for (int i = 0; i < baseStation.entrances.Count; i++) {
 			float dist = Vector2.Distance(baseStation.entrances[i], transform.position);
-             if (dist < closest) {
-             	closest = dist;
-             	index = i;
-             }
+			if (dist < closest) {
+				closest = dist;
+				index = i;
+			}
 		}
 		return baseStation.entrances[index];
-	}
-
-	public void setBase(BaseStation baseStation) {
-		this.baseStation = baseStation;
-	}
-
-	public bool isCarryingTarget() {
-		return carryingTarget;
-	}
-
-	public bool isMovingToTarget() {
-		return !isCarryingTarget() && currentTarget != null;
-	}
-
-	public bool hasTarget() {
-		return currentTarget != null;
 	}
 
 	private bool isInsideEnvironment() {

@@ -24,12 +24,13 @@ public class BaseStation : MonoBehaviour {
 	 */
 	void Update () {
 
-		List<Human> isBeingRescued = new List<Human> ();
+		List<Human> humansBeingRescued = new List<Human> ();
+
 		foreach (Agent agent in agents) {
 			if (agent.isMovingToTarget() || agent.isCarryingTarget()) {
 				Human target = agent.getCurrentTarget();
-				if (!isBeingRescued.Contains(target)) {
-					isBeingRescued.Add(target);
+				if (!humansBeingRescued.Contains(target)) {
+					humansBeingRescued.Add(target);
 				}
 			}
 		}
@@ -44,12 +45,12 @@ public class BaseStation : MonoBehaviour {
 			}
 
 			foreach (Human unrescuedHuman in unrescuedHumans) {
-				if (!isBeingRescued.Contains(unrescuedHuman)) {
+				if (!humansBeingRescued.Contains(unrescuedHuman)) {
 
 					Debug.Log ("Assignning new target human from base station at " + (Vector2) unrescuedHuman.transform.position);
 
 					agent.assignTarget(unrescuedHuman);
-					isBeingRescued.Add(unrescuedHuman);
+					humansBeingRescued.Add(unrescuedHuman);
 
 					break;
 				}
@@ -60,12 +61,11 @@ public class BaseStation : MonoBehaviour {
 	public void uploadSavedTarget(Human human) {
 
 		if (!unrescuedHumans.Contains (human)) {
-
 			Debug.Log ("ERROR! Rescued unregistered human");
-
-		} else {
-			unrescuedHumans.Remove (human);
+			return;
 		}
+
+		unrescuedHumans.Remove (human);
 	}
 
 	public void uploadTargetLocation(Human human) {
