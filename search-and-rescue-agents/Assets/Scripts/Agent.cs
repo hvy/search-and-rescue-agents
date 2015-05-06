@@ -99,10 +99,14 @@ public class Agent : MonoBehaviour {
 	}
 
     private void searchForTargets() {
+
+		// TODO Use flood fill algorithm
     	
-		int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
-		int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
-        
+		//int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
+		//int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
+		int h = rand.Next((int)-baseStation.getGridEnvironment().getWidth()/2, (int)baseStation.getGridEnvironment().getWidth()/2);
+		int w = rand.Next((int)-baseStation.getGridEnvironment().getHeight()/2, (int)baseStation.getGridEnvironment().getHeight()/2);
+
 		if (searchCount > 100) {
 			goal = new Vector2(h,w);
 			searchCount = 0;
@@ -266,7 +270,10 @@ public class Agent : MonoBehaviour {
 	}
 
 	private bool isInsideEnvironment() {
-		if (transform.position.x >= -baseStation.width/2-0.3f && transform.position.x <= baseStation.width/2+0.3f && transform.position.y <= baseStation.height/2+0.3f && transform.position.y >= -baseStation.height/2-0.3f)
+		if (transform.position.x >= -baseStation.getGridEnvironment().getWidth()/2-0.3f && 
+		    transform.position.x <= baseStation.getGridEnvironment().getWidth()/2+0.3f && 
+		    transform.position.y <= baseStation.getGridEnvironment().getHeight()/2+0.3f && 
+		    transform.position.y >= -baseStation.getGridEnvironment().getHeight()/2-0.3f)
 			return true;
 		return false;
 	}

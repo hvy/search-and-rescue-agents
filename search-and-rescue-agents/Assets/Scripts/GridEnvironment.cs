@@ -96,5 +96,11 @@ public class GridEnvironment {
         return new Vector2((int)pos.x/tileSize, (int)pos.y/tileSize);
     }
 
+	public int getHeight() {
+		return height;
+	}
 
+	public int getWidth() {
+		return width;
+	}
 }

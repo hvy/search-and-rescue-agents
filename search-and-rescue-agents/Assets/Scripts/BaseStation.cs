@@ -4,18 +4,14 @@ using System.Collections.Generic;
 
 public class BaseStation : MonoBehaviour {
 
-	public int height, width;
 	public List<Vector2> entrances;
-
 	public List<Agent> agents;
 	public List<Human> unrescuedHumans;
-
-	public GridEnvironment gridEnvironment;
+	private GridEnvironment gridEnv = null;
 	
 	void Start () {
 		agents = new List<Agent> ();
 		unrescuedHumans = new List<Human> ();
-		gridEnvironment = new GridEnvironment(height, width, 0.1f);
 	}
 
 	/**
@@ -58,6 +54,14 @@ public class BaseStation : MonoBehaviour {
 		}
 	}
 
+	public void setGridEnvironment(GridEnvironment gridEnv) {
+		this.gridEnv = gridEnv;
+	}
+
+	public GridEnvironment getGridEnvironment() {
+		return gridEnv;
+	}
+
 	public void uploadSavedTarget(Human human) {
 
 		if (!unrescuedHumans.Contains (human)) {
@@ -75,16 +79,16 @@ public class BaseStation : MonoBehaviour {
 		}
 
 		Vector2 position = (Vector2) human.transform.position; // Cast to Vector2 from Vector3
-		gridEnvironment.addHuman(position);
+		gridEnv.addHuman(position);
 	}
 
 	// TODO how is this supposed to work? Should we maybe assume everything not identified is ground?
 	public void uploadGroundLocation(Vector2 loc) {
-		gridEnvironment.addGround(loc);
+		gridEnv.addGround(loc);
 	}
 
 	public void uploadObstacleLocation(Vector2 loc) {
-		gridEnvironment.addObstacle(loc);
+		gridEnv.addObstacle(loc);
 	}
 	
 	public void addAgent(Agent agent) {
