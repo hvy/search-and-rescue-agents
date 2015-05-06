@@ -52,23 +52,32 @@ public class Agent : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
-    	// TODO, collect information. This trigger will find humans and obstacles.
+    	// Collect information. This trigger will find humans and obstacles.
 		sendEnvironmentData(other);
 
 		// Found human
 		if (other.name == "human") {
         	other.gameObject.GetComponent<Renderer>().material.color = Color.green;
 		}
-
     }
 
     void OnTriggerStay2D(Collider2D other) {
+
         if (other.name == "human") {
         	// Only save humans who are not already saved and close.
-        	Human human = (Human) other.gameObject.GetComponent(typeof(Human));
-        	if (!carryingTarget)
-        		currentTarget = human;
-            if (Vector3.Distance(transform.position, other.transform.position) < 0.1f && !human.saved) {
+        	
+			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
+
+			/*
+			if (!carryingTarget && human == currentTarget) {
+
+				Debug.Log ("Picking up human " + (Vector2) human.transform.position);
+
+				currentTarget = human;
+			}
+        	*/
+
+			if (!human.saved && currentTarget == human && Vector3.Distance(transform.position, other.transform.position) < 0.1f) {
 				pickUpTarget(other);
             }
         }
@@ -88,13 +97,6 @@ public class Agent : MonoBehaviour {
 
     private void move (Vector2 g) {
     	collisionAvoidance(g);
-	}
-
-	public bool hasTarget() {
-		if (currentTarget != null) 
-			return true;
-		else
-			return false;
 	}
 
 	public Human getCurrentTarget() {
@@ -117,6 +119,9 @@ public class Agent : MonoBehaviour {
     }
 
 	private void pickUpTarget(Collider2D human) {
+
+		Debug.Log ("Picking up target at " + (Vector2) human.transform.position);
+
 		gameObject.GetComponent<Renderer>().material.color = Color.white;
 		human.gameObject.SetActive(false);
 
@@ -126,13 +131,17 @@ public class Agent : MonoBehaviour {
 
 	private void putDownTarget() {
 
-		baseStation.uploadSavedTaret (currentTarget);
+		Debug.Log ("Saved Human!");
+
+		baseStation.uploadSavedTarget (currentTarget);
 
 		gameObject.GetComponent<Renderer>().material.color = Color.blue;
 		currentTarget.transform.position = transform.position;
       	currentTarget.gameObject.SetActive(true);
-      	carryingTarget = false;
-      	currentTarget = null;
+      	
+		currentTarget = null;
+		carryingTarget = false;
+      	
       	Display.currentRescued++;
     }
 
@@ -143,7 +152,9 @@ public class Agent : MonoBehaviour {
 			baseStation.uploadObstacleLocation (pos);
 		else if (name == "human") {
 			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
-			baseStation.uploadTargetLocation(human);
+			if (!human.saved) {
+				baseStation.uploadTargetLocation(human);
+			}
 		}
 	}
 
@@ -239,6 +250,18 @@ public class Agent : MonoBehaviour {
 
 	public void setBase(BaseStation baseStation) {
 		this.baseStation = baseStation;
+	}
+
+	public bool isCarryingTarget() {
+		return carryingTarget;
+	}
+
+	public bool isMovingToTarget() {
+		return !isCarryingTarget() && currentTarget != null;
+	}
+
+	public bool hasTarget() {
+		return currentTarget != null;
 	}
 
 	private bool isInsideEnvironment() {
