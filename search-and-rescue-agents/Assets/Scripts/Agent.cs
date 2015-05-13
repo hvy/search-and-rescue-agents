@@ -188,25 +188,28 @@ public class Agent : MonoBehaviour {
 	 */
 	private void sendEnvironmentData(Collider2D other) {
 
+		RaycastHit2D hit;
+		int layerMask = 1 << 8;
+
 		switch (other.tag) {
 
 		case "Empty":
 
+			// TODO Make sure that the agent can't see through walls
 			baseStation.uploadGroundLocation (other.transform.position);
 			Destroy(other.gameObject);
 			break;
 
 		case "Obstacle":
 
+			// TODO Make sure that the agent can't see through walls
 			baseStation.uploadObstacleLocation (other.transform.position);
 			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
 			break;
 
 		case "Human":
 
-			RaycastHit2D hit;
 
-			int layerMask = 1 << 8;
 			// This would cast rays only against colliders in layer 8, so we just inverse the mask.
 			layerMask = ~layerMask;
 			hit = Physics2D.Raycast(transform.position, (other.transform.position-transform.position).normalized, Vector2.Distance (transform.position, other.transform.position)-1f, layerMask);

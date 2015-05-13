@@ -107,7 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocity: 4
   rotationSpeed: 6
-  collisionDistance: .100000001
+  collisionDistance: .5
   goal: {x: 0, y: 0}
   start: {x: 0, y: 0}
 --- !u!222 &22276604
