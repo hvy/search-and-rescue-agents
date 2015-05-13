@@ -85,8 +85,12 @@ public class GridEnvironment {
     }
 
     public void addGround(Vector2 pos) {
+
         pos = convertToGrid(pos);
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
+
+		// TODO Not sure if this is working as intended
+		Debug.Log ("Ground at: " + (int)pos.x + " " + (int)pos.y);
     }
 
     private Vector2 convertToGrid(Vector2 pos) {

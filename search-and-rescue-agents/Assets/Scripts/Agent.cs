@@ -192,8 +192,8 @@ public class Agent : MonoBehaviour {
 
 		case "Empty":
 
-			// TODO Send this data to the base station
-
+			baseStation.uploadGroundLocation (other.transform.position);
+			Destroy(other.gameObject);
 			break;
 
 		case "Obstacle":
@@ -331,4 +331,6 @@ public class Agent : MonoBehaviour {
 			return false;
 		}
 	}
+
+
 }
