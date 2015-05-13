@@ -77,11 +77,15 @@ public class GridEnvironment {
     public void addHuman(Vector2 pos) {
         pos = convertToGrid(pos);
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.HUMAN;
+
+		Debug.Log ("Human at tile: " + (int)pos.x + " " + (int)pos.y);
     }
 
     public void addObstacle(Vector2 pos) {
         pos = convertToGrid(pos);
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.OBSTACLE;
+
+		Debug.Log ("Obstacle at tile: " + (int)pos.x + " " + (int)pos.y);
     }
 
     public void addGround(Vector2 pos) {
@@ -90,13 +94,13 @@ public class GridEnvironment {
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
 
 		// TODO Not sure if this is working as intended
-		Debug.Log ("Ground at: " + (int)pos.x + " " + (int)pos.y);
+		Debug.Log ("Ground at tile: " + (int)pos.x + " " + (int)pos.y);
     }
 
     private Vector2 convertToGrid(Vector2 pos) {
         // subtract by a little to prevent rounding up
-        pos.x = pos.x+width/2 -0.002f;
-        pos.y = pos.y+height/2 - 0.002f;
+        pos.x = pos.x+width/2;
+        pos.y = pos.y+height/2;
         return new Vector2((int)pos.x/tileSize, (int)pos.y/tileSize);
     }
 
