@@ -121,15 +121,6 @@ public class BaseStation : MonoBehaviour {
 	}
 
 	public List<Vector2> getPathFromTo(Vector2 from, Vector2 to) {
-		List<Vector2> path = AStarPathFinding.findPath (from, to, gridEnv);
-
-		Debug.Log ("Length of path: " + path.Count);
-
-		for (int i = 1; i < path.Count; i++) {
-			Debug.DrawLine(path[i - 1], path[i], Color.cyan, 3.0f);
-		}
-
-		return path;
-
+		return AStarPathFinding.findPath (from, to, gridEnv);
 	}
 }

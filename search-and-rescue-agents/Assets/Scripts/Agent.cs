@@ -231,35 +231,36 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void moveToEntrance() {
-		
-		if (path.Count == 0) {
-			Debug.Log ("A* algorithm....");
-			path = baseStation.getPathFromTo (transform.position, closestEntrance ());
-			Debug.Log ("Found a path of length: " + path.Count);
 
-			Debug.Log ("============================");
-			string p = "";
-			foreach (Vector2 pathNode in path) {
-				p += ("" + pathNode + ", ");
-			}
-			Debug.Log(p);
-		}
-
-		if (path.Count > 0) {
-            goal = path[0];
-            path.RemoveAt(0);
-		} else {
-        	goal = closestEntrance();
-		}
-
-		Debug.Log ("Goal: " + goal);
-
-		move(goal);
-
-		if (Vector2.Distance(transform.position, closestEntrance()) < 0.5f) {
+		// If the agent is carrying the target and is close enought to an entrance, drop the target at the current position
+		if (isTouching(closestEntrance()) && isCarryingTarget() ) {
 			putDownTarget();
 			path.Clear ();
+			return;
+		} 
+		
+		if (path.Count > 0 /* A path is precomputed */) {
+
+			if (isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
+				path.RemoveAt(0);
+			}
+
+		} else /* No path is precomputed. Find one! */ {
+
+			// DEBUG
+			Debug.Log ("[INFO] Running A*....");
+			
+			path = baseStation.getPathFromTo (transform.position, closestEntrance ());
+			
+			// DEBUG
+			Debug.Log ("[INFO] Found a path of length: " + path.Count);
+			for (int i = 1; i < path.Count; i++) 
+				Debug.DrawLine(path[i - 1], path[i], Color.cyan, 15.0f);
 		}
+
+		Debug.Log ("Next goal: " + path[0]);
+
+		move(path[0]);
 	}
 
 	private void moveToTarget() {
@@ -356,5 +357,7 @@ public class Agent : MonoBehaviour {
 		}
 	}
 
-
+	private bool isTouching(Vector2 pos) {
+		return Vector2.Distance (transform.position, pos) < 0.5f;
+	}
 }

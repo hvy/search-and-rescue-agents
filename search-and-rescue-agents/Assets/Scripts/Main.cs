@@ -22,8 +22,8 @@ public class Main : MonoBehaviour {
 
 		// TODO Hardcoded entrances
 		List<Vector2> entrances = new List<Vector2> ();
-		entrances.Add (new Vector2(8, 0));
-		entrances.Add (new Vector2(9, 0));
+		entrances.Add (new Vector2(8, 0.3f));
+		entrances.Add (new Vector2(9, 0.3f));
 
 		baseStation = (BaseStation) GameObject.Find ("BaseStation").GetComponent(typeof(BaseStation));
 
