@@ -22,53 +22,32 @@ public class GridEnvironment {
 			GROUND
 		}
 
-        public float xStart, xEnd;
-        public float yStart, yEnd;
+		int x, y;
         public Type type;
 
-        public Tile() {
-
-        }
-
-        public Tile(float xStart, float xEnd, float yStart, float yEnd) {
-            this.xStart = xStart;
-            this.xEnd = xEnd;
-            this.yStart = yStart;
-            this.yEnd = yEnd;
+        public Tile(int x, int y) {
+			this.x = x;
+			this.y = y;
+			type = Tile.Type.UNKNOWN;
         }
 
         public bool isInTile(Vector2 pos) {
-            if (pos.x >= xStart && pos.x < xEnd && pos.y >= yStart && pos.y < yEnd)
+			if (pos.x >= x - 0.5f && pos.x < x + 0.5f && pos.y >= y - 0.5f && pos.y < y + 0.5f)
                 return true;
             return false;
         }
-
-        public void print() {
-            Debug.Log("(" + xStart + "-" + xEnd + ", " + yStart + "-" + yEnd + ") "+ type);
-        }
-
-        public Vector2 getRealCoordinates(float tileSize, int width, int height) {
-            float xReal = xStart*tileSize - width/2;
-            float yReal = yStart*tileSize - height/2;
-            return new Vector2(xReal, yReal);
-        }
     }
 
-    public GridEnvironment(int height, int width, float tileSize) {
-        this.height = height;
+    public GridEnvironment(int height, int width) {
+        
+		this.height = height;
         this.width = width;
-        this.tileSize = tileSize;
 
-        float x = width/tileSize;
-        float y = height/tileSize;
+        grid = new Tile[width, height];
 
-        grid = new Tile[(int)x, (int)y];
-
-        Debug.Log(x + " " + y);
-
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                grid[i,j] = new Tile(i, i+1, j, j+1);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                grid[i,j] = new Tile(i, j);
             }
         }
     }
@@ -90,17 +69,10 @@ public class GridEnvironment {
     }
 
     public Vector2 convertToGrid(Vector2 pos) {
-        // subtract by a little to prevent rounding up
-        pos.x = pos.x+width/2;
-        pos.y = pos.y+height/2;
-        return new Vector2((int)pos.x/tileSize, (int)pos.y/tileSize);
+        int x = Mathf.RoundToInt(pos.x);
+		int y = Mathf.RoundToInt(pos.y);
+        return new Vector2(x, y);
     }
-
-	public Vector2 convertToWorldCoordinate(Vector2 pos) {
-		pos.x = pos.x-width/2;
-		pos.y = pos.y-height/2;
-		return new Vector2((int)pos.x*tileSize, (int)pos.y*tileSize);
-	}
 
 	public int getHeight() {
 		return height;

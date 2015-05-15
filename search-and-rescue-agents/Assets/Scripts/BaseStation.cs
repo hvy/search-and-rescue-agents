@@ -120,7 +120,7 @@ public class BaseStation : MonoBehaviour {
 		agents.Add(agent);
 	}
 
-	public List<GNode> getPathFromTo(Vector2 from, Vector2 to) {
+	public List<Vector2> getPathFromTo(Vector2 from, Vector2 to) {
 		List<Vector2> path = AStarPathFinding.findPath (from, to, gridEnv);
 
 		Debug.Log ("Length of path: " + path.Count);
@@ -129,10 +129,7 @@ public class BaseStation : MonoBehaviour {
 			Debug.DrawLine(path[i - 1], path[i], Color.cyan, 3.0f);
 		}
 
-		// TODO Convert the Vector2 path to a GNode path
-		List<GNode> gnodePath = new List<GNode> ();
-
-		return gnodePath;
+		return path;
 
 	}
 }

@@ -15,14 +15,14 @@ public class Agent : MonoBehaviour {
     private bool carryingTarget; // Agent is carrying a target
     private Human currentTarget = null; // Target to rescue
 	private long searchCount = 0;
-	private List<GNode> path; // path to current goal (if exists)
+	private List<Vector2> path; // path to current goal (if exists)
 
 	private int debugCount = 0; // TODO REMOVE
 
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
-    	path = new List<GNode>();
+    	path = new List<Vector2>();
     	start = transform.position;
     	rand = new System.Random();
     	Display.agentCount++;
@@ -141,8 +141,8 @@ public class Agent : MonoBehaviour {
     	
 		//int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
 		//int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
-		int h = rand.Next((int)-baseStation.getGridEnvironment().getWidth()/2, (int)baseStation.getGridEnvironment().getWidth()/2);
-		int w = rand.Next((int)-baseStation.getGridEnvironment().getHeight()/2, (int)baseStation.getGridEnvironment().getHeight()/2);
+		int h = rand.Next(0, (int)baseStation.getGridEnvironment().getWidth());
+		int w = rand.Next(0, (int)baseStation.getGridEnvironment().getHeight());
 
 		if (searchCount > 50) {
 			goal = new Vector2(h,w);
@@ -233,21 +233,28 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void moveToEntrance() {
+		
+		if (path.Count == 0) {
+			Debug.Log ("A* algorithm....");
+			path = baseStation.getPathFromTo (transform.position, closestEntrance ());
+			Debug.Log ("Found a path of length: " + path.Count);
 
-		// TODO FIX
-		if (debugCount == 0) {
-			// TODO Update the path according to the path obtained form the base station
-			Debug.Log ("NEED TO FIND THE ENTRANCE NOW!");
-			baseStation.getPathFromTo (transform.position, closestEntrance ());
-			debugCount++;
+			Debug.Log ("============================");
+			string p = "";
+			foreach (Vector2 pathNode in path) {
+				p += ("" + pathNode + ", ");
+			}
+			Debug.Log(p);
 		}
 
-		if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
-            goal = path[0].getPos();
+		if (path.Count > 0) {
+            goal = path[0];
             path.RemoveAt(0);
 		} else {
         	goal = closestEntrance();
 		}
+
+		Debug.Log ("Goal: " + goal);
 
 		move(goal);
 
@@ -262,8 +269,9 @@ public class Agent : MonoBehaviour {
 	private void moveToTarget() {
 
 		if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
-			goal = path[0].getPos();
+			goal = path[0];
 			path.RemoveAt(0);
+			Debug.Log("Wow we are in moveToTarget path.Count > 0 !!!! ");
 		} else {
 			goal = currentTarget.transform.position;
 		}
@@ -326,7 +334,7 @@ public class Agent : MonoBehaviour {
 
 	private Vector2 closestEntrance() {
 		int index = 0;
-		float closest = 1000000f;
+		float closest = float.MaxValue;
 		for (int i = 0; i < baseStation.entrances.Count; i++) {
 			float dist = Vector2.Distance(baseStation.entrances[i], transform.position);
 			if (dist < closest) {
@@ -342,10 +350,10 @@ public class Agent : MonoBehaviour {
 	 * Make sure it works for other environments.
 	 */
 	private bool isInsideEnvironment() {
-		if (transform.position.x >= -baseStation.getGridEnvironment ().getWidth () / 2 - 0.3f && 
-			transform.position.x <= baseStation.getGridEnvironment ().getWidth () / 2 + 0.3f && 
-			transform.position.y <= baseStation.getGridEnvironment ().getHeight () / 2 + 0.3f && 
-			transform.position.y >= -baseStation.getGridEnvironment ().getHeight () / 2 - 0.3f) {
+		if (transform.position.x > 0 && 
+			transform.position.x < baseStation.getGridEnvironment ().getWidth () && 
+			transform.position.y > 0 && 
+			transform.position.y < baseStation.getGridEnvironment ().getHeight ()) {
 			return true;
 		} else {
 			return false;

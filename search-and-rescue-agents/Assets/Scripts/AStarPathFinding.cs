@@ -31,11 +31,7 @@ public class AStarPathFinding  {
 
 			if(current == to) {
 				Debug.Log ("Found the goal!!");
-				List<Vector2> path = reconstructPath(cameFrom, to);
-				for(int i = 0; i < path.Count; i++) {
-					path[i] = env.convertToWorldCoordinate(path[i]);
-				}
-				return path;
+				return reconstructPath(cameFrom, to);
 			}
 
 			openSet.Remove(current);
@@ -76,6 +72,9 @@ public class AStarPathFinding  {
 			current = cameFrom[current];
 			path.Add(current);
 		}
+
+		path.Reverse ();
+
 		return path;
 	}
 

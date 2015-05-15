@@ -10,7 +10,6 @@ using System.Collections.Generic;
 public class Main : MonoBehaviour {
 
 	public Vector2 environmentPosition;
-	public float tileSize; // Set in inspector
 	public int height, width; // Set in inspector
 
 	private BaseStation baseStation;
@@ -23,10 +22,8 @@ public class Main : MonoBehaviour {
 
 		// TODO Hardcoded entrances
 		List<Vector2> entrances = new List<Vector2> ();
-		entrances.Add (new Vector2(0, 10));
-		entrances.Add (new Vector2(1, 10));
-		entrances.Add (new Vector2(-2, -10));
-		entrances.Add (new Vector2(-1, -10));
+		entrances.Add (new Vector2(8, 0));
+		entrances.Add (new Vector2(9, 0));
 
 		baseStation = (BaseStation) GameObject.Find ("BaseStation").GetComponent(typeof(BaseStation));
 
@@ -34,7 +31,7 @@ public class Main : MonoBehaviour {
 
 		baseStation.setEnvironmentPos (environmentPosition);
 
-		GridEnvironment gridEnv = new GridEnvironment(height, width, tileSize);
+		GridEnvironment gridEnv = new GridEnvironment(height, width);
 
 		baseStation.setGridEnvironment (gridEnv);
 	}
