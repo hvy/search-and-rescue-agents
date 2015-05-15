@@ -71,6 +71,12 @@ public class GridEnvironment {
     public Vector2 convertToGrid(Vector2 pos) {
         int x = Mathf.RoundToInt(pos.x);
 		int y = Mathf.RoundToInt(pos.y);
+
+		// Since Mathf.RoundToInt may round up or down on .5 depending on if the number is even or odd
+		// x can potentially equal width and y can potentially qual y. 
+		if (x >= width) x = width - 1;
+		if (y >= height) x = height - 1;
+
         return new Vector2(x, y);
     }
 

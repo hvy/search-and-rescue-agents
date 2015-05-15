@@ -17,8 +17,6 @@ public class Agent : MonoBehaviour {
 	private long searchCount = 0;
 	private List<Vector2> path; // path to current goal (if exists)
 
-	private int debugCount = 0; // TODO REMOVE
-
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
@@ -259,10 +257,8 @@ public class Agent : MonoBehaviour {
 		move(goal);
 
 		if (Vector2.Distance(transform.position, closestEntrance()) < 0.5f) {
-
 			putDownTarget();
-
-			debugCount = 0; // TODO REMOVE
+			path.Clear ();
 		}
 	}
 
