@@ -15,16 +15,16 @@ public class GridEnvironment {
     // UNKNOWN as default
     public class Tile {
 
+		public enum Type {
+			UNKNOWN,
+			OBSTACLE,
+			HUMAN,
+			GROUND
+		}
+
         public float xStart, xEnd;
         public float yStart, yEnd;
         public Type type;
-
-        public enum Type {
-                UNKNOWN,
-                OBSTACLE,
-                HUMAN,
-                GROUND
-        }
 
         public Tile() {
 
@@ -52,7 +52,6 @@ public class GridEnvironment {
             float yReal = yStart*tileSize - height/2;
             return new Vector2(xReal, yReal);
         }
-
     }
 
     public GridEnvironment(int height, int width, float tileSize) {
@@ -77,32 +76,31 @@ public class GridEnvironment {
     public void addHuman(Vector2 pos) {
         pos = convertToGrid(pos);
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.HUMAN;
-
-		Debug.Log ("Human at tile: " + (int)pos.x + " " + (int)pos.y);
     }
 
     public void addObstacle(Vector2 pos) {
         pos = convertToGrid(pos);
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.OBSTACLE;
-
-		Debug.Log ("Obstacle at tile: " + (int)pos.x + " " + (int)pos.y);
     }
 
     public void addGround(Vector2 pos) {
 
         pos = convertToGrid(pos);
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
-
-		// TODO Not sure if this is working as intended
-		Debug.Log ("Ground at tile: " + (int)pos.x + " " + (int)pos.y);
     }
 
-    private Vector2 convertToGrid(Vector2 pos) {
+    public Vector2 convertToGrid(Vector2 pos) {
         // subtract by a little to prevent rounding up
         pos.x = pos.x+width/2;
         pos.y = pos.y+height/2;
         return new Vector2((int)pos.x/tileSize, (int)pos.y/tileSize);
     }
+
+	public Vector2 convertToWorldCoordinate(Vector2 pos) {
+		pos.x = pos.x-width/2;
+		pos.y = pos.y-height/2;
+		return new Vector2((int)pos.x*tileSize, (int)pos.y*tileSize);
+	}
 
 	public int getHeight() {
 		return height;
@@ -110,5 +108,13 @@ public class GridEnvironment {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public bool isWalkable(int x, int y) {
+		if (grid[x, y].type == Tile.Type.GROUND) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

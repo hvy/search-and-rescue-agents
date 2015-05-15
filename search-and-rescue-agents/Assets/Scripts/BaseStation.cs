@@ -7,7 +7,7 @@ public class BaseStation : MonoBehaviour {
 	public List<Vector2> entrances;
 	public List<Agent> agents;
 	public List<Human> unrescuedHumans;
-	private GridEnvironment gridEnv = null;
+	public GridEnvironment gridEnv = null;
 	private Vector2 environmentPosition;
 	
 	void Start () {
@@ -53,6 +53,23 @@ public class BaseStation : MonoBehaviour {
 				}
 			}
 		}
+
+
+		
+		// DEBUG Prints the explored grid
+		/*
+		Debug.Log ("===================================");
+		for (int y = gridEnv.height - 1; y >= 0; y--) { 
+			string gridRow = "";
+			for (int x = 0; x < gridEnv.width; x++) {
+				if (gridEnv.isWalkable(x, y)) {
+					gridRow += "O";
+				} else {
+					gridRow += "X";
+				}
+			}
+			Debug.Log(gridRow);
+		}*/
 	}
 
 	public void setGridEnvironment(GridEnvironment gridEnv) {
@@ -91,7 +108,6 @@ public class BaseStation : MonoBehaviour {
 		gridEnv.addHuman(position);
 	}
 
-	// TODO how is this supposed to work? Should we maybe assume everything not identified is ground?
 	public void uploadGroundLocation(Vector2 loc) {
 		gridEnv.addGround(loc);
 	}
@@ -102,5 +118,21 @@ public class BaseStation : MonoBehaviour {
 	
 	public void addAgent(Agent agent) {
 		agents.Add(agent);
+	}
+
+	public List<GNode> getPathFromTo(Vector2 from, Vector2 to) {
+		List<Vector2> path = AStarPathFinding.findPath (from, to, gridEnv);
+
+		Debug.Log ("Length of path: " + path.Count);
+
+		for (int i = 1; i < path.Count; i++) {
+			Debug.DrawLine(path[i - 1], path[i], Color.cyan, 3.0f);
+		}
+
+		// TODO Convert the Vector2 path to a GNode path
+		List<GNode> gnodePath = new List<GNode> ();
+
+		return gnodePath;
+
 	}
 }

@@ -16,7 +16,9 @@ public class Agent : MonoBehaviour {
     private Human currentTarget = null; // Target to rescue
 	private long searchCount = 0;
 	private List<GNode> path; // path to current goal (if exists)
-	
+
+	private int debugCount = 0; // TODO REMOVE
+
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
@@ -176,6 +178,9 @@ public class Agent : MonoBehaviour {
 
 		currentTarget.transform.position = transform.position;
       	currentTarget.gameObject.SetActive(true);
+
+		// TODO Destroying the target so that it does not block the entrance for other agents
+		Destroy (currentTarget.gameObject);
       	
 		currentTarget = null;
 		carryingTarget = false;
@@ -228,6 +233,15 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void moveToEntrance() {
+
+		// TODO FIX
+		if (debugCount == 0) {
+			// TODO Update the path according to the path obtained form the base station
+			Debug.Log ("NEED TO FIND THE ENTRANCE NOW!");
+			baseStation.getPathFromTo (transform.position, closestEntrance ());
+			debugCount++;
+		}
+
 		if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
             goal = path[0].getPos();
             path.RemoveAt(0);
@@ -238,7 +252,10 @@ public class Agent : MonoBehaviour {
 		move(goal);
 
 		if (Vector2.Distance(transform.position, closestEntrance()) < 0.5f) {
+
 			putDownTarget();
+
+			debugCount = 0; // TODO REMOVE
 		}
 	}
 
