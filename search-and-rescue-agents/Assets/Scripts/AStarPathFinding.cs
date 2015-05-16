@@ -6,10 +6,6 @@ public class AStarPathFinding  {
 
 	public static List<Vector2> findPath(Vector2 from, Vector2 to, GridEnvironment env) {
 
-		// Convert from world coordinate to grid coordinate
-		from = env.convertToGrid(from);
-		to = env.convertToGrid(to);
-
 		HashSet<Vector2> openSet = new HashSet<Vector2> (); // Set of nodes to evaluate
 		HashSet<Vector2> closedSet = new HashSet<Vector2> (); // Set of nodes already evaluated
 
@@ -26,6 +22,8 @@ public class AStarPathFinding  {
 		while (openSet.Count > 0) {
 
 			Vector2 current = lowestFScoreFromOpenSet(openSet, fScore); // find the Vector2 node in openSet with the lowest fScore
+
+			Debug.Log (current);
 
 			if(current == to) {
 				return reconstructPath(cameFrom, to);

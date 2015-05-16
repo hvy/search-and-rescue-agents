@@ -94,7 +94,7 @@ public class BaseStation : MonoBehaviour {
 			Debug.Log ("ERROR! Rescued unregistered human");
 			return;
 		}
-
+	
 		unrescuedHumans.Remove (human);
 	}
 

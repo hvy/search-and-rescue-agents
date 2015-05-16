@@ -7,7 +7,7 @@ public class Agent : MonoBehaviour {
 	public float velocity;
 	public float rotationSpeed;
 	public float collisionDistance;
-	public Vector2 goal; // current position to move toward
+
 	public Vector2 start;
 
 	private System.Random rand;
@@ -15,6 +15,7 @@ public class Agent : MonoBehaviour {
     private bool carryingTarget; // Agent is carrying a target
     private Human currentTarget = null; // Target to rescue
 	private long searchCount = 0;
+	private Vector2 goal;
 	private List<Vector2> path; // path to current goal (if exists)
 
 	// Use this for initialization
@@ -37,9 +38,6 @@ public class Agent : MonoBehaviour {
 			moveToTarget ();
 		else
 			searchForTargets ();
-		
-		    
-		Debug.DrawLine(transform.position, goal, Color.white); // Debug
 	}
 
 	void OnDrawGizmos() {
@@ -48,10 +46,10 @@ public class Agent : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
-    	// Collect information. This trigger will find humans and obstacles.
-		sendEnvironmentData(other);
+		sendEnvironmentData(other); // Collect information. This trigger will find humans and obstacles.
     }
 
+	/*
     void OnTriggerStay2D(Collider2D other) {
 
 		//if (isInsideEnvironment ()) {
@@ -66,41 +64,9 @@ public class Agent : MonoBehaviour {
 				if (!human.saved && currentTarget == human && Vector3.Distance(transform.position, other.transform.position) < 0.3f) {
 					pickUpTarget(other);
 				}
-
-			
 			}
-
-		//} else {
-
-			/*
-			if (other.tag == "Empty") {
-
-				Debug.Log ("Found entrance: " + (Vector2) other.transform.position);
-
-				goal = other.transform.position;
-
-			} else if (other.tag == "Obstacle") { // Not inside yet but found the environment
-				
-				Vector2 nextPosition = other.transform.position;
-				Vector2 obstacleDirection = other.transform.position - this.transform.position;
-
-				Debug.Log (obstacleDirection);
-
-				if (obstacleDirection.x < 0 && obstacleDirection.y < 0) {
-
-				} else if (obstacleDirection.x > 0 && obstacleDirection.y > 0) {
-
-				} else if (obstacleDirection.x < 0 && obstacleDirection.y > 0) {
-					nextPosition.x += 1;
-				} else if (obstacleDirection.x > 0 && obstacleDirection.y < 0) {
-				
-				}
-
-				goal = nextPosition;
-			}
-			*/
-		//}
     }
+	*/
 
 	/**
 	 * Assign a target to this agent. This is decided by the base station.
@@ -136,9 +102,6 @@ public class Agent : MonoBehaviour {
     private void searchForTargets() {
 
 		// TODO Use flood fill algorithm
-    	
-		//int h = rand.Next((int)-baseStation.width/2, (int)baseStation.width/2);
-		//int w = rand.Next((int)-baseStation.height/2, (int)baseStation.height/2);
 		int h = rand.Next(0, (int)baseStation.getGridEnvironment().getWidth());
 		int w = rand.Next(0, (int)baseStation.getGridEnvironment().getHeight());
 
@@ -156,15 +119,29 @@ public class Agent : MonoBehaviour {
 		move (goal);
 	}
 
-	private void pickUpTarget(Collider2D human) {
+	private void tryToPickUpTarget(Human human) {
 
-		Debug.Log ("Picking up target at " + (Vector2) human.transform.position); // Debug
-		gameObject.GetComponent<Renderer>().material.color = Color.white; // Debug
+		if (human.saved) {
+			Debug.Log ("[ERROR] Trying to save an already rescued target. Target: " + (Vector2) human.transform.position);
+			return;
+		} else if (carryingTarget) {
+			Debug.Log ("[ERROR] Trying to save a target while carrying a target. Trying to pick up target: " + (Vector2) human.transform.position);
+			return;
+		} else if (human != currentTarget) {
+			Debug.Log ("[ERROR] Trying to save a target of another agent. Target: " + human.transform.position);
+			return;
+		}
 
+		// Debug
+		Debug.Log ("[INFO] Picking up target at: " + (Vector2) human.transform.position); 
+		gameObject.GetComponent<Renderer>().material.color = Color.white;
 		human.gameObject.SetActive(false);
 
         currentTarget.saved = true;
 		carryingTarget = true;
+
+		// Make sure the base station is notified of the pick up and that the position of the target is now walkable
+		baseStation.uploadGroundLocation ((Vector2) human.transform.position);
 	}
 
 	private void putDownTarget() {
@@ -240,40 +217,67 @@ public class Agent : MonoBehaviour {
 		} 
 		
 		if (path.Count > 0 /* A path is precomputed */) {
-
+			
 			if (isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
 				path.RemoveAt(0);
 			}
-
-		} else /* No path is precomputed. Find one! */ {
-
-			// DEBUG
-			Debug.Log ("[INFO] Running A*....");
 			
-			path = baseStation.getPathFromTo (transform.position, closestEntrance ());
+		} else /* No path is precomputed. Find one! */ {
+			
+			// Convert from world coordinate to grid coordinate
+			Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
+			Vector2 to = baseStation.gridEnv.convertToGrid (closestEntrance ());
+			
+			// DEBUG
+			Debug.Log ("[INFO] Running A* from " + (Vector2) from + " to: " + (Vector2) to);
+			
+			path = baseStation.getPathFromTo (from, to);
 			
 			// DEBUG
 			Debug.Log ("[INFO] Found a path of length: " + path.Count);
 			for (int i = 1; i < path.Count; i++) 
 				Debug.DrawLine(path[i - 1], path[i], Color.cyan, 15.0f);
 		}
-
+		
 		Debug.Log ("Next goal: " + path[0]);
-
+		
 		move(path[0]);
 	}
 
 	private void moveToTarget() {
+		
+		if (isTouching(currentTarget.transform.position)) {
+			tryToPickUpTarget(currentTarget);
+			path.Clear ();
+			return;
+		} 
+		
+		if (path.Count > 0 /* A path is precomputed */) {
+			
+			if (isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
+				path.RemoveAt(0);
+			}
+			
+		} else /* No path is precomputed. Find one! */ {
 
-		if (path.Count > 0 && Vector2.Distance(goal, transform.position) < 0.5) {
-			goal = path[0];
-			path.RemoveAt(0);
-			Debug.Log("Wow we are in moveToTarget path.Count > 0 !!!! ");
-		} else {
-			goal = currentTarget.transform.position;
+			// Convert from world coordinate to grid coordinate
+			Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
+			Vector2 to = baseStation.gridEnv.convertToGrid (currentTarget.transform.position);
+				
+			// DEBUG
+			Debug.Log ("[INFO] Running A* from " + (Vector2) from + " to: " + (Vector2) to);
+			
+			path = baseStation.getPathFromTo (from, to);
+			
+			// DEBUG
+			Debug.Log ("[INFO] Found a path of length: " + path.Count);
+			for (int i = 1; i < path.Count; i++) 
+				Debug.DrawLine(path[i - 1], path[i], Color.red, 15.0f);
 		}
-
-		move(goal);
+		
+		Debug.Log ("Next goal: " + path[0]);
+		
+		move(path[0]);
 	}
 
 	private bool collisionAvoidance(Vector2 goal) {
