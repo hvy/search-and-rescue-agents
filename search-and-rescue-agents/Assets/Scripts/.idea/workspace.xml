@@ -55,8 +55,8 @@
       <file leaf-file-name="Agent.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Agent.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6938776">
-              <caret line="192" column="65" selection-start-line="192" selection-start-column="65" selection-end-line="192" selection-end-column="65" />
+            <state vertical-scroll-proportion="0.40816328">
+              <caret line="293" column="19" selection-start-line="293" selection-start-column="19" selection-end-line="294" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -832,8 +832,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Agent.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6938776">
-          <caret line="192" column="65" selection-start-line="192" selection-start-column="65" selection-end-line="192" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.40816328">
+          <caret line="293" column="19" selection-start-line="293" selection-start-column="19" selection-end-line="294" selection-end-column="19" />
           <folding />
         </state>
       </provider>

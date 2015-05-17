@@ -291,8 +291,8 @@ public class Agent : MonoBehaviour {
 			return;
 		}
 
-//        if (path == null)
-//        	return;
+        if (path == null)
+        	return;
 		
 		if (path.Count > 0 /* A path is precomputed */) {
 			
