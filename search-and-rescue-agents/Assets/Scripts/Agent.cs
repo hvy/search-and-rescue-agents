@@ -163,6 +163,40 @@ public class Agent : MonoBehaviour {
       	Display.currentRescued++;
     }
 
+    /* Returns true if the ray between the two points collides with an obstacle */
+    private bool rayCastForObstruction(Vector2 p1, Vector2 p2) {
+		int layerMask = 1 << 9;
+
+    	RaycastHit2D hit;
+    	RaycastHit2D hit2;
+		RaycastHit2D hit3;
+		RaycastHit2D hit4;
+		RaycastHit2D hit5;
+		RaycastHit2D hit6;
+		RaycastHit2D hit7;
+
+		layerMask = layerMask;
+		hit = Physics2D.Raycast(p1, (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+		hit2 = Physics2D.Raycast(p1+new Vector2(0.5f, 0), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+		hit3 = Physics2D.Raycast(p1+new Vector2(-0.5f, 0), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+		hit4 = Physics2D.Raycast(p1+new Vector2(0, 0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+		hit5 = Physics2D.Raycast(p1+new Vector2(0, -0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+		hit6 = Physics2D.Raycast(p1+new Vector2(-0.5f, -0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+		hit7 = Physics2D.Raycast(p1+new Vector2(0.5f, 0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+
+		if (hit.collider != null && hit.collider.tag == "Obstacle" &&
+		hit2.collider != null && hit2.collider.tag == "Obstacle" &&
+		hit3.collider != null && hit3.collider.tag == "Obstacle" &&
+		hit4.collider != null && hit4.collider.tag == "Obstacle" &&
+		hit5.collider != null && hit4.collider.tag == "Obstacle" &&
+		hit6.collider != null && hit4.collider.tag == "Obstacle" &&
+		hit7.collider != null && hit4.collider.tag == "Obstacle") {
+			return true;
+		}
+
+		return false;
+    }
+
 	/* 
 	 * Send environment data to the base station
 	 */
@@ -176,6 +210,8 @@ public class Agent : MonoBehaviour {
 		case "Empty":
 
 			// TODO Make sure that the agent can't see through walls
+            if (rayCastForObstruction(transform.position, other.transform.position))
+            	break;
 			baseStation.uploadGroundLocation (other.transform.position);
 			Destroy(other.gameObject);
 			break;
@@ -183,6 +219,9 @@ public class Agent : MonoBehaviour {
 		case "Obstacle":
 
 			// TODO Make sure that the agent can't see through walls
+
+		  	if (rayCastForObstruction(transform.position, other.transform.position))
+				break;
 			baseStation.uploadObstacleLocation (other.transform.position);
 			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
 			break;
@@ -250,7 +289,10 @@ public class Agent : MonoBehaviour {
 			tryToPickUpTarget(currentTarget);
 			path.Clear ();
 			return;
-		} 
+		}
+
+//        if (path == null)
+//        	return;
 		
 		if (path.Count > 0 /* A path is precomputed */) {
 			
