@@ -49,24 +49,11 @@ public class Agent : MonoBehaviour {
 		sendEnvironmentData(other); // Collect information. This trigger will find humans and obstacles.
     }
 
-	/*
+
     void OnTriggerStay2D(Collider2D other) {
-
-		//if (isInsideEnvironment ()) {
-
-			if (other.tag == "Human") {
-				Human human = (Human) other.gameObject.GetComponent(typeof(Human));
-				
-				// Only save humans who are 
-				// 1. not already saved
-				// 2. is assignment to this agent by the base station
-				// 3. is close enough to this agent
-				if (!human.saved && currentTarget == human && Vector3.Distance(transform.position, other.transform.position) < 0.3f) {
-					pickUpTarget(other);
-				}
-			}
+		sendEnvironmentData(other);          // TODO maybe shouldn't be called EVERY time for performance reasons?
     }
-	*/
+
 
 	/**
 	 * Assign a target to this agent. This is decided by the base station.
@@ -179,7 +166,7 @@ public class Agent : MonoBehaviour {
 
     /* Returns true if the ray between the two points collides with an obstacle */
     private bool rayCastForObstruction(Vector2 p1, Vector2 p2) {
-		int layerMask = 1 << 9;
+		int layerMask = 1 << 8;
 
     	RaycastHit2D hit;
     	RaycastHit2D hit2;
@@ -188,23 +175,32 @@ public class Agent : MonoBehaviour {
 		RaycastHit2D hit5;
 		RaycastHit2D hit6;
 		RaycastHit2D hit7;
+		RaycastHit2D hit8;
+		RaycastHit2D hit9;
+		RaycastHit2D hit10;
+		RaycastHit2D hit11;
 
-		layerMask = layerMask;
-		hit = Physics2D.Raycast(p1, (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
-		hit2 = Physics2D.Raycast(p1+new Vector2(0.5f, 0), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
-		hit3 = Physics2D.Raycast(p1+new Vector2(-0.5f, 0), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
-		hit4 = Physics2D.Raycast(p1+new Vector2(0, 0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
-		hit5 = Physics2D.Raycast(p1+new Vector2(0, -0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
-		hit6 = Physics2D.Raycast(p1+new Vector2(-0.5f, -0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
-		hit7 = Physics2D.Raycast(p1+new Vector2(0.5f, 0.5f), (p2-p1).normalized, Vector2.Distance (p1, p2), layerMask);
+		layerMask = ~layerMask;
+		float distOffset = 0.0f;
+
+		Vector2 direction = (p2-p1);
+
+
+		hit = Physics2D.Raycast(p1, direction, Vector2.Distance (p1, p2)-distOffset, layerMask);
+		hit2 = Physics2D.Raycast(p1+new Vector2(0.5f, 0), direction, Vector2.Distance (p1, p2)-distOffset, layerMask);
+		hit3 = Physics2D.Raycast(p1+new Vector2(-0.5f, 0), direction, Vector2.Distance (p1, p2)-distOffset, layerMask);
+		hit4 = Physics2D.Raycast(p1+new Vector2(0, 0.5f), direction, Vector2.Distance (p1, p2)-distOffset, layerMask);
+		hit5 = Physics2D.Raycast(p1+new Vector2(0, -0.5f), direction, Vector2.Distance (p1, p2)-distOffset, layerMask);
+		hit6 = Physics2D.Raycast(p1+new Vector2(-0.5f, -0.5f), direction, Vector2.Distance (p1, p2)-distOffset, layerMask);
+		hit7 = Physics2D.Raycast(p1+new Vector2(0.5f, 0.5f), direction, Vector2.Distance (p1, p2)-distOffset, layerMask);
 
 		if (hit.collider != null && hit.collider.tag == "Obstacle" &&
 		hit2.collider != null && hit2.collider.tag == "Obstacle" &&
 		hit3.collider != null && hit3.collider.tag == "Obstacle" &&
 		hit4.collider != null && hit4.collider.tag == "Obstacle" &&
-		hit5.collider != null && hit4.collider.tag == "Obstacle" &&
-		hit6.collider != null && hit4.collider.tag == "Obstacle" &&
-		hit7.collider != null && hit4.collider.tag == "Obstacle") {
+		hit5.collider != null && hit5.collider.tag == "Obstacle" &&
+		hit6.collider != null && hit6.collider.tag == "Obstacle" &&
+		hit7.collider != null && hit7.collider.tag == "Obstacle") {
 			return true;
 		}
 
@@ -223,6 +219,7 @@ public class Agent : MonoBehaviour {
 
 		case "Empty":
 
+			// TODO fix bug. Reason: it is only called when objects come INTO the radius. Needs to be called more often
 			// TODO Make sure that the agent can't see through walls
             if (rayCastForObstruction(transform.position, other.transform.position))
             	break;
@@ -324,6 +321,8 @@ public class Agent : MonoBehaviour {
 			Debug.Log ("[INFO] Running A* from " + (Vector2) from + " to: " + (Vector2) to);
 			
 			path = baseStation.getPathFromTo (from, to);
+			if (path == null)
+				return;
 			
 			// DEBUG
 			Debug.Log ("[INFO] Found a path of length: " + path.Count);
