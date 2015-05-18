@@ -59,15 +59,22 @@ public class GridEnvironment {
     public void addObstacle(Vector2 pos) {
         pos = convertToGrid(pos);
 
-//		Debug.Log ("======================================");
-//		Debug.Log ((int)pos.x);
-//		Debug.Log ((int)pos.y);
+        if ((int)pos.x >= width)
+            pos.x = width-1;
+        if ((int)pos.y >= height)
+            pos.y = height-1;
 
-        grid[(int)pos.x, (int)pos.y].type = Tile.Type.OBSTACLE;
+        grid[Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y)].type = Tile.Type.OBSTACLE;
     }
 
     public void addGround(Vector2 pos) {
         pos = convertToGrid(pos);
+
+        if ((int)pos.x >= width)
+            pos.x = width-1;
+        if ((int)pos.y >= height)
+            pos.y = height-1;
+
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
     }
 

@@ -96,6 +96,12 @@ public class Agent : MonoBehaviour {
 		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
 		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
 
+		if (to.x == -1 && to.y == -1) {
+			moveToEntrance();
+			return;
+		}
+
+
 		if (path == null || path.Count == 0)
 			path = baseStation.getPathFromTo (from, to);
 
