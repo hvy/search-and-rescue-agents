@@ -221,14 +221,14 @@ public class EnvironmentFactory {
 		entrances.Add(new Vector2(-10,-8));
 		entrances.Add(new Vector2(-10,-7));
 		
-		entrances.Add(new Vector2(10,-1));
-		entrances.Add(new Vector2(10,-2));
-		entrances.Add(new Vector2(10,-3));
-		entrances.Add(new Vector2(10,-4));
-		entrances.Add(new Vector2(10,-5));
-		entrances.Add(new Vector2(10,-6));
-		entrances.Add(new Vector2(10,-7));
-		entrances.Add(new Vector2(10,-8));
+//		entrances.Add(new Vector2(10,-1));
+//		entrances.Add(new Vector2(10,-2));
+//		entrances.Add(new Vector2(10,-3));
+//		entrances.Add(new Vector2(10,-4));
+//		entrances.Add(new Vector2(10,-5));
+//		entrances.Add(new Vector2(10,-6));
+//		entrances.Add(new Vector2(10,-7));
+//		entrances.Add(new Vector2(10,-8));
 		
 		// Set humans
 		List<Human> humans = new List<Human>();
