@@ -9,10 +9,12 @@ public class BaseStation : MonoBehaviour {
 	public List<Human> unrescuedHumans;
 	public GridEnvironment gridEnv = null;
 	private Vector2 environmentPosition;
+	private System.Random rand;
 	
 	void Start () {
 		agents = new List<Agent> ();
 		unrescuedHumans = new List<Human> ();
+		rand = new System.Random();
 	}
 
 	/**
@@ -122,5 +124,35 @@ public class BaseStation : MonoBehaviour {
 
 	public List<Vector2> getPathFromTo(Vector2 from, Vector2 to) {
 		return AStarPathFinding.findPath (from, to, gridEnv);
+	}
+
+	public bool isEdge(Vector2 pos) {
+		Vector2 gridPos = gridEnv.convertToGrid(pos);
+
+		return gridEnv.isEdge((int) gridPos.x, (int) gridPos.y);
+	}
+
+	public bool isUnknownLocation(Vector2 pos) {
+		Vector2 gridPos = gridEnv.convertToGrid(pos);
+
+		return gridEnv.isUnknown((int)gridPos.x, (int)gridPos.y);
+	}
+
+	public Vector2 getEdge() {
+
+		int x_mod = rand.Next(gridEnv.width);
+		int y_mod = rand.Next(gridEnv.height);
+
+		for (int y = gridEnv.height - 1; y >= 0; y--) {
+
+			for (int x = 0; x < gridEnv.width; x++) {
+				if (gridEnv.isWalkable(x_mod, y_mod) && gridEnv.isEdge(x_mod,y_mod)) {
+					return new Vector2(x_mod,y_mod);
+				}
+				x_mod = (x_mod+1)%(gridEnv.width - 1);
+			}
+			y_mod = (y_mod+1)%(gridEnv.height - 1);
+		}
+		return new Vector2(-1,-1);
 	}
 }

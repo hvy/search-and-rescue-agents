@@ -23,7 +23,7 @@ public class AStarPathFinding  {
 
 			Vector2 current = lowestFScoreFromOpenSet(openSet, fScore); // find the Vector2 node in openSet with the lowest fScore
 
-			Debug.Log (current);
+//			Debug.Log (current);
 
 			if(current == to) {
 				return reconstructPath(cameFrom, to);

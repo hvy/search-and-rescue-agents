@@ -10,7 +10,6 @@ public class GridEnvironment {
     public int height, width;
     public Tile[,] grid;
     public float tileSize;
-    public int x ,y; // number of tiles in x and y axis
 
     // UNKNOWN as default
     public class Tile {
@@ -60,9 +59,9 @@ public class GridEnvironment {
     public void addObstacle(Vector2 pos) {
         pos = convertToGrid(pos);
 
-		Debug.Log ("======================================");
-		Debug.Log ((int)pos.x);
-		Debug.Log ((int)pos.y);
+//		Debug.Log ("======================================");
+//		Debug.Log ((int)pos.x);
+//		Debug.Log ((int)pos.y);
 
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.OBSTACLE;
     }
@@ -95,6 +94,24 @@ public class GridEnvironment {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public bool isUnknown(int x, int y) {
+	    if (grid[x, y].type == Tile.Type.UNKNOWN)
+	        return true;
+	    return false;
+	}
+
+	public bool isEdge(int x, int y) {
+	    if (this.width-1 <= x || this.height-1 <= y || x <= 0 || y <= 0)
+	        return false;
+
+
+	    if (grid[x+1,y].type == Tile.Type.UNKNOWN || grid[x,y+1].type == Tile.Type.UNKNOWN || grid[x-1,y].type == Tile.Type.UNKNOWN || grid[x,y-1].type == Tile.Type.UNKNOWN)
+	        return true;
+
+	    return false;
+
 	}
 
 	public bool isWalkable(int x, int y) {

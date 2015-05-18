@@ -96,21 +96,35 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void move (Vector2 g) {
+		Debug.DrawLine(transform.position, g, Color.white);
 		collisionAvoidance(g);
 	}
 
     private void searchForTargets() {
 
-		// TODO Use flood fill algorithm
-		int h = rand.Next(0, (int)baseStation.getGridEnvironment().getWidth());
-		int w = rand.Next(0, (int)baseStation.getGridEnvironment().getHeight());
+		// TODO Use flood fill algorithm (right now moving to a random edge tile to explore)
+		Vector2 pos = new Vector2(-1,-1);
+
+		pos = baseStation.getEdge();
+		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
+		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
+
+		if (path == null || path.Count == 0)
+			path = baseStation.getPathFromTo (from, to);
+
+		if (path != null && isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
+			path.RemoveAt(0);
+		}
 
 		if (searchCount > 50) {
-			goal = new Vector2(h,w);
+			goal = pos;
 			searchCount = 0;
         }
 
-		move(goal);
+		if (path == null || path.Count == 0)
+			move(goal);
+		else
+			move(path[0]);
 		searchCount++;
     }
 
@@ -278,7 +292,7 @@ public class Agent : MonoBehaviour {
 				Debug.DrawLine(path[i - 1], path[i], Color.cyan, 15.0f);
 		}
 		
-		Debug.Log ("Next goal: " + path[0]);
+		//Debug.Log ("Next goal: " + path[0]);
 		
 		move(path[0]);
 	}
@@ -317,7 +331,7 @@ public class Agent : MonoBehaviour {
 				Debug.DrawLine(path[i - 1], path[i], Color.red, 15.0f);
 		}
 		
-		Debug.Log ("Next goal: " + path[0]);
+//		Debug.Log ("Next goal: " + path[0]);
 		
 		move(path[0]);
 	}
