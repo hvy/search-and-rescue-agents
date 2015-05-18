@@ -92,7 +92,8 @@ public class Agent : MonoBehaviour {
 		// TODO Use flood fill algorithm (right now moving to a random edge tile to explore)
 		Vector2 pos = new Vector2(-1,-1);
 
-		pos = baseStation.getEdge();
+
+		pos = baseStation.getEdge(transform.position);
 		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
 		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
 
@@ -101,6 +102,9 @@ public class Agent : MonoBehaviour {
 			return;
 		}
 
+		if (path != null && path.Count != 0 && !baseStation.isEdge(path[path.Count-1])) {
+			path = null;
+		}
 
 		if (path == null || path.Count == 0)
 			path = baseStation.getPathFromTo (from, to);
@@ -270,7 +274,10 @@ public class Agent : MonoBehaviour {
 			putDownTarget();
 			path.Clear ();
 			return;
-		} 
+		}
+
+		if (path == null)
+			return;
 		
 		if (path.Count > 0 /* A path is precomputed */) {
 			
@@ -296,8 +303,8 @@ public class Agent : MonoBehaviour {
 		}
 		
 		//Debug.Log ("Next goal: " + path[0]);
-		
-		move(path[0]);
+		if (path.Count != 0)
+			move(path[0]);
 	}
 
 	private void moveToTarget() {
@@ -337,8 +344,8 @@ public class Agent : MonoBehaviour {
 		}
 		
 //		Debug.Log ("Next goal: " + path[0]);
-		
-		move(path[0]);
+		if (path.Count != 0)
+			move(path[0]);
 	}
 
 	private bool collisionAvoidance(Vector2 goal) {

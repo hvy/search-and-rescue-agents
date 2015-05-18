@@ -22,10 +22,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="EnvironmentFactory.cs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="EnvironmentFactory.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/EnvironmentFactory.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.46938777">
+            <state vertical-scroll-proportion="0.0">
               <caret line="224" column="54" selection-start-line="224" selection-start-column="42" selection-end-line="224" selection-end-column="42" />
               <folding />
             </state>
@@ -42,11 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Agent.cs" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Agent.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Agent.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="99" column="30" selection-start-line="99" selection-start-column="29" selection-end-line="99" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.63265306">
+              <caret line="124" column="32" selection-start-line="124" selection-start-column="22" selection-end-line="124" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -66,7 +66,7 @@
         <entry file="file://$PROJECT_DIR$/BaseStation.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="142" column="54" selection-start-line="142" selection-start-column="45" selection-end-line="142" selection-end-column="45" />
+              <caret line="158" column="48" selection-start-line="158" selection-start-column="39" selection-end-line="158" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -149,10 +149,10 @@
         <option value="$PROJECT_DIR$/Environment.cs" />
         <option value="$PROJECT_DIR$/Main.cs" />
         <option value="$PROJECT_DIR$/AStarPathFinding.cs" />
-        <option value="$PROJECT_DIR$/BaseStation.cs" />
         <option value="$PROJECT_DIR$/GridEnvironment.cs" />
-        <option value="$PROJECT_DIR$/Agent.cs" />
         <option value="$PROJECT_DIR$/EnvironmentFactory.cs" />
+        <option value="$PROJECT_DIR$/BaseStation.cs" />
+        <option value="$PROJECT_DIR$/Agent.cs" />
       </list>
     </option>
   </component>
@@ -786,14 +786,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Agent.cs.meta">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/BaseStation.cs.meta">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -818,10 +810,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Agent.cs">
+    <entry file="file://$PROJECT_DIR$/EnvironmentFactory.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="99" column="30" selection-start-line="99" selection-start-column="29" selection-end-line="99" selection-end-column="29" />
+          <caret line="224" column="54" selection-start-line="224" selection-start-column="42" selection-end-line="224" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agent.cs.meta">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -829,15 +829,15 @@
     <entry file="file://$PROJECT_DIR$/BaseStation.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="142" column="54" selection-start-line="142" selection-start-column="45" selection-end-line="142" selection-end-column="45" />
+          <caret line="158" column="48" selection-start-line="158" selection-start-column="39" selection-end-line="158" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/EnvironmentFactory.cs">
+    <entry file="file://$PROJECT_DIR$/Agent.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46938777">
-          <caret line="224" column="54" selection-start-line="224" selection-start-column="42" selection-end-line="224" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.63265306">
+          <caret line="124" column="32" selection-start-line="124" selection-start-column="22" selection-end-line="124" selection-end-column="22" />
           <folding />
         </state>
       </provider>
