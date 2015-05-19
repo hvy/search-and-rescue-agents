@@ -10,7 +10,8 @@ public class BaseStation : MonoBehaviour {
 	public GridEnvironment gridEnv = null;
 	private Vector2 environmentPosition;
 	private System.Random rand;
-	
+	private int width, height;
+
 	void Start () {
 		agents = new List<Agent> ();
 		unrescuedHumans = new List<Human> ();
