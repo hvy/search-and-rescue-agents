@@ -6,7 +6,10 @@ public class BaseStation : MonoBehaviour {
 
 	public List<Vector2> entrances;
 	public List<Agent> agents;
-	public List<Human> unrescuedHumans;
+
+	private List<Human> assignedTargets;
+	private List<Human> unassignedTargets;
+
 	public GridEnvironment gridEnv = null;
 	private Vector2 environmentPosition;
 	private System.Random rand;
@@ -14,7 +17,8 @@ public class BaseStation : MonoBehaviour {
 
 	void Start () {
 		agents = new List<Agent> ();
-		unrescuedHumans = new List<Human> ();
+		assignedTargets = new List<Human> ();
+		unassignedTargets = new List<Human> ();
 		rand = new System.Random();
 	}
 
@@ -24,55 +28,42 @@ public class BaseStation : MonoBehaviour {
 	 */
 	void Update () {
 
-		List<Human> humansBeingRescued = new List<Human> ();
-
+		List<Agent> availableAgents = new List<Agent> ();
 		foreach (Agent agent in agents) {
-			if (agent.isMovingToTarget() || agent.isCarryingTarget()) {
-				Human target = agent.getCurrentTarget();
-				if (!humansBeingRescued.Contains(target)) {
-					humansBeingRescued.Add(target);
-				}
+			if (!agent.hasTarget ()) {
+				availableAgents.Add (agent);
 			}
 		}
 
-		foreach (Agent agent in agents) {
-			
-			// TODO At the moment we let the agent pick up the current target if it has one,
-			// in the future, we might have action that overrides the current target if another 
-			// task with a higher priority is found.
-			if (agent.hasTarget()) {
-				continue;
+		for (int i = unassignedTargets.Count - 1; i >= 0; i--) {
+
+			Human unassignedTarget = unassignedTargets[i];
+
+			float closestDistanceToAgent = float.MaxValue;
+			Agent closestAgent = null;
+
+			foreach (Agent agent in availableAgents) {
+
+				float distanceToAgent = Vector2.SqrMagnitude(unassignedTarget.transform.position - agent.transform.position);
+
+				if(distanceToAgent < closestDistanceToAgent) {
+					closestAgent = agent;
+					closestDistanceToAgent = distanceToAgent;
+				}
 			}
 
-			foreach (Human unrescuedHuman in unrescuedHumans) {
-				if (!humansBeingRescued.Contains(unrescuedHuman)) {
+			// Assign the closest agent to the target where the distance is measured in the euclidean space
+			if(closestAgent != null) {
 
-					Debug.Log ("Assignning new target human from base station at " + (Vector2) unrescuedHuman.transform.position);
+				Debug.Log ("[INFO] Assignning new target human from base station at " + (Vector2) unassignedTarget.transform.position + " to agent " + (Vector2) closestAgent.transform.position);
 
-					agent.assignTarget(unrescuedHuman);
-					humansBeingRescued.Add(unrescuedHuman);
+				closestAgent.assignTarget(unassignedTarget);
+				availableAgents.Remove(closestAgent);
 
-					break;
-				}
+				unassignedTargets.Remove (unassignedTarget);
+				assignedTargets.Add(unassignedTarget);
 			}
 		}
-
-
-		
-		// DEBUG Prints the explored grid
-		/*
-		Debug.Log ("===================================");
-		for (int y = gridEnv.height - 1; y >= 0; y--) { 
-			string gridRow = "";
-			for (int x = 0; x < gridEnv.width; x++) {
-				if (gridEnv.isWalkable(x, y)) {
-					gridRow += "O";
-				} else {
-					gridRow += "X";
-				}
-			}
-			Debug.Log(gridRow);
-		}*/
 	}
 
 	public void setGridEnvironment(GridEnvironment gridEnv) {
@@ -91,24 +82,46 @@ public class BaseStation : MonoBehaviour {
 		return environmentPosition;
 	}
 
+	/**
+	 * Called when an agent brings a human back to the environment entrance
+	 */
 	public void uploadSavedTarget(Human human) {
 
-		if (!unrescuedHumans.Contains (human)) {
-			Debug.Log ("ERROR! Rescued unregistered human");
-			return;
+		if (unassignedTargets.Contains (human) || !assignedTargets.Contains(human)) {
+			Debug.Log ("[ERROR] Rescued unregistered human");
+		} else {
+			Debug.Log ("[INFO] Rescued target");
+			assignedTargets.Remove(human);
 		}
-	
-		unrescuedHumans.Remove (human);
 	}
 
-	public void uploadTargetLocation(Human human) {
-		if (!unrescuedHumans.Contains (human)) {
-			Debug.Log ("Found human at " + (Vector2) human.transform.position);
-			unrescuedHumans.Add (human);
+	/**
+	 * Called when an agent find a human in the environment.
+	 * If the agent has no current target, that human is assigned as the target.
+	 */
+	public void uploadTargetLocation(Agent agent, Human human) {
+					
+		gridEnv.addHuman((Vector2) human.transform.position);
+
+		if (!unassignedTargets.Contains (human) && !assignedTargets.Contains(human)) {
+			unassignedTargets.Add (human);
 		}
 
-		Vector2 position = (Vector2) human.transform.position; // Cast to Vector2 from Vector3
-		gridEnv.addHuman(position);
+		/*
+		if (!assignedTargets.Contains(human) && !agent.hasTarget ()) {
+
+			Debug.Log ("[INFO] Assignning new target human from base station at " + (Vector2) human.transform.position + " to agent " + agent.transform.position);
+
+			agent.assignTarget(human);
+			assignedTargets.Add(human);
+
+		} else if (!unassignedTargets.Contains (human)) {
+
+			Debug.Log ("[INFO] Agent at " + agent.transform.position + " found human at " + (Vector2) human.transform.position);
+
+			unassignedTargets.Add (human);
+		}
+		*/
 	}
 
 	public void uploadGroundLocation(Vector2 loc) {
