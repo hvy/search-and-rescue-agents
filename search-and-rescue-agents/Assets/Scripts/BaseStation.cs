@@ -104,24 +104,18 @@ public class BaseStation : MonoBehaviour {
 		gridEnv.addHuman((Vector2) human.transform.position);
 
 		if (!unassignedTargets.Contains (human) && !assignedTargets.Contains(human)) {
-			unassignedTargets.Add (human);
+
+			// Immediately assign the human to the agent if the agent has no current target
+			if(!agent.hasTarget()) {
+
+				Debug.Log ("[INFO] Assignning new target human from base station at " + (Vector2) human.transform.position + " to agent " + (Vector2) agent.transform.position);
+
+				agent.assignTarget(human);
+				assignedTargets.Add(human);
+			} else {
+				unassignedTargets.Add (human);
+			}
 		}
-
-		/*
-		if (!assignedTargets.Contains(human) && !agent.hasTarget ()) {
-
-			Debug.Log ("[INFO] Assignning new target human from base station at " + (Vector2) human.transform.position + " to agent " + agent.transform.position);
-
-			agent.assignTarget(human);
-			assignedTargets.Add(human);
-
-		} else if (!unassignedTargets.Contains (human)) {
-
-			Debug.Log ("[INFO] Agent at " + agent.transform.position + " found human at " + (Vector2) human.transform.position);
-
-			unassignedTargets.Add (human);
-		}
-		*/
 	}
 
 	public void uploadGroundLocation(Vector2 loc) {
