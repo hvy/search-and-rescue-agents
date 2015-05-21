@@ -157,7 +157,6 @@ public class Agent : MonoBehaviour {
 
 	private void putDownTarget() {
 
-		Debug.Log ("Saved Human!"); // Debug
 		gameObject.GetComponent<Renderer>().material.color = Color.blue; // Debug
 
 		baseStation.uploadSavedTarget (currentTarget);
@@ -258,7 +257,7 @@ public class Agent : MonoBehaviour {
 			}
 			Human human = (Human) other.gameObject.GetComponent(typeof(Human));
 			if (!human.saved)
-				baseStation.uploadTargetLocation(human);
+				baseStation.uploadTargetLocation(this, human);
 			other.gameObject.GetComponent<Renderer>().material.color = Color.green; // Debug
 			break;
 
@@ -271,6 +270,7 @@ public class Agent : MonoBehaviour {
 
 		// If the agent is carrying the target and is close enought to an entrance, drop the target at the current position
 		if (isTouching(closestEntrance()) && isCarryingTarget() ) {
+
 			putDownTarget();
 			path.Clear ();
 			return;
@@ -290,19 +290,13 @@ public class Agent : MonoBehaviour {
 			// Convert from world coordinate to grid coordinate
 			Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
 			Vector2 to = baseStation.gridEnv.convertToGrid (closestEntrance ());
-			
-			// DEBUG
-			Debug.Log ("[INFO] Running A* from " + (Vector2) from + " to: " + (Vector2) to);
-			
+
 			path = baseStation.getPathFromTo (from, to);
-			
-			// DEBUG
-			Debug.Log ("[INFO] Found a path of length: " + path.Count);
+
 			for (int i = 1; i < path.Count; i++) 
 				Debug.DrawLine(path[i - 1], path[i], Color.cyan, 15.0f);
 		}
-		
-		//Debug.Log ("Next goal: " + path[0]);
+
 		if (path.Count != 0)
 			move(path[0]);
 	}
@@ -329,21 +323,15 @@ public class Agent : MonoBehaviour {
 			// Convert from world coordinate to grid coordinate
 			Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
 			Vector2 to = baseStation.gridEnv.convertToGrid (currentTarget.transform.position);
-				
-			// DEBUG
-			Debug.Log ("[INFO] Running A* from " + (Vector2) from + " to: " + (Vector2) to);
 			
 			path = baseStation.getPathFromTo (from, to);
 			if (path == null)
 				return;
-			
-			// DEBUG
-			Debug.Log ("[INFO] Found a path of length: " + path.Count);
+
 			for (int i = 1; i < path.Count; i++) 
 				Debug.DrawLine(path[i - 1], path[i], Color.red, 15.0f);
 		}
-		
-//		Debug.Log ("Next goal: " + path[0]);
+
 		if (path.Count != 0)
 			move(path[0]);
 	}

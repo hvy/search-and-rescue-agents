@@ -58,8 +58,10 @@
      <Compile Include="Assets\Scripts\Human.cs" />
      <Compile Include="Assets\Scripts\HumanFactory.cs" />
      <Compile Include="Assets\Scripts\Main.cs" />
+     <Compile Include="Assets\Scripts\MainSmallLevel.cs" />
      <Compile Include="Assets\Scripts\ObstacleFactory.cs" />
      <Compile Include="Assets\Scripts\Pathfinding.cs" />
+     <Compile Include="Assets\Scripts\StageCreator.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

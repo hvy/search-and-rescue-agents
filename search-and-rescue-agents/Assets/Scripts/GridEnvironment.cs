@@ -53,7 +53,13 @@ public class GridEnvironment {
 
     public void addHuman(Vector2 pos) {
         pos = convertToGrid(pos);
-        grid[(int)pos.x, (int)pos.y].type = Tile.Type.HUMAN;
+
+		if ((int)pos.x >= width)
+			pos.x = width-1;
+		if ((int)pos.y >= height)
+			pos.y = height-1;
+		
+		grid[Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y)].type = Tile.Type.HUMAN;
     }
 
     public void addObstacle(Vector2 pos) {
@@ -83,14 +89,6 @@ public class GridEnvironment {
 		float flooredY = Mathf.Floor (pos.y);
 		int x = Mathf.Abs (pos.x - flooredX) >= 0.5f ? Mathf.CeilToInt (pos.x) : Mathf.FloorToInt (pos.x);
 		int y = Mathf.Abs (pos.y - flooredY) >= 0.5f ? Mathf.CeilToInt (pos.y) : Mathf.FloorToInt (pos.y);
-
-        //int x = Mathf.RoundToInt(pos.x);
-		//int y = Mathf.RoundToInt(pos.y);
-
-		// Since Mathf.RoundToInt may round up or down on .5 depending on if the number is even or odd
-		// x can potentially equal width and y can potentially qual y. 
-		//if (x >= width) x = width - 1;
-		//if (y >= height) x = height - 1;
 
         return new Vector2(x, y);
     }
