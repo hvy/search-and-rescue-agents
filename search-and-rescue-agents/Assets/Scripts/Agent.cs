@@ -18,6 +18,8 @@ public class Agent : MonoBehaviour {
 	private Vector2 goal;
 	private List<Vector2> path; // path to current goal (if exists)
 
+	private long c; // counter
+
 	// Use this for initialization
 	void Start () {
     	carryingTarget = false;
@@ -51,7 +53,11 @@ public class Agent : MonoBehaviour {
 
 
     void OnTriggerStay2D(Collider2D other) {
-		sendEnvironmentData(other);          // TODO maybe shouldn't be called EVERY time for performance reasons?
+    	if (c > 100) {
+			sendEnvironmentData(other);          // TODO maybe shouldn't be called EVERY time for performance reasons?
+			c = 0;
+    	}
+    	c++;
     }
 
 
