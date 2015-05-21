@@ -162,11 +162,11 @@ public class BaseStation : MonoBehaviour {
 				if (gridEnv.isWalkable(x_mod, y_mod) && gridEnv.isEdge(x_mod,y_mod)) {
 					Vector2 temp = new Vector2(x_mod,y_mod);
 					float dist;
-					List<Vector2> path = AStarPathFinding.findPath(gridEnv.convertToGrid(pos), temp, gridEnv);
-					if (path == null)
+//					List<Vector2> path = AStarPathFinding.findPath(gridEnv.convertToGrid(pos), temp, gridEnv);
+//					if (path == null)
 						dist = Vector2.Distance(temp, pos);
-					else
-						dist = path.Count;
+//					else
+//						dist = path.Count;
 					if (dist < closestDistance) {
 						closestDistance = dist;
 						closest = temp;

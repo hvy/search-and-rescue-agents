@@ -53,11 +53,7 @@ public class Agent : MonoBehaviour {
 
 
     void OnTriggerStay2D(Collider2D other) {
-    	if (c > 100) {
-			sendEnvironmentData(other);          // TODO maybe shouldn't be called EVERY time for performance reasons?
-			c = 0;
-    	}
-    	c++;
+		sendEnvironmentData(other);          // TODO maybe shouldn't be called EVERY time for performance reasons?
     }
 
 
