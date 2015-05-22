@@ -159,6 +159,24 @@ public class GridEnvironment {
         grid[(int)pos.x, (int)pos.y].C += 1;
 	}
 
+	public void decrementC(Vector2 pos) {
+    	    pos = convertToGrid(pos);
+
+            if ((int)pos.x >= width)
+                pos.x = width-1;
+            if ((int)pos.y >= height)
+                pos.y = height-1;
+            if ((int)pos.x <= 0)
+                pos.x = 1;
+            if ((int)pos.y <= 0)
+                pos.y = 1;
+
+            if (grid[(int)pos.x, (int)pos.y].C == -1 || grid[(int)pos.x, (int)pos.y].C <= 1)
+                return;
+
+            grid[(int)pos.x, (int)pos.y].C -= 1;
+    	}
+
 	public bool isWalkable(int x, int y) {
 		if(x < 0 || y < 0 || x >= grid.GetLength(0) || y >= grid.GetLength(1)) {
 			Debug.Log ("[WARNING] Index out of bounds in GridEnvironment");

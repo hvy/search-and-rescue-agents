@@ -15,6 +15,8 @@ public class BaseStation : MonoBehaviour {
 	private System.Random rand;
 	private int width, height;
 
+	private int updateAntC = 0;
+
 	void Start () {
 		agents = new List<Agent> ();
 		assignedTargets = new List<Human> ();
@@ -64,6 +66,14 @@ public class BaseStation : MonoBehaviour {
 				assignedTargets.Add(unassignedTarget);
 			}
 		}
+
+		/* Update weights for ANT algo */
+		if (updateAntC > 100) {
+//			weightANT();
+			updateAntC = 0;
+		}
+		updateAntC += 1;
+
 	}
 
 	public void setGridEnvironment(GridEnvironment gridEnv) {
@@ -228,6 +238,23 @@ public class BaseStation : MonoBehaviour {
 		gridEnv.incrementC(pos);
 	}
 
+	public void decrementC(Vector2 pos) {
+		gridEnv.decrementC(pos);
+	}
+
+	public void weightANT() {
+		Debug.Log("weighting ant tiles");
+		for (int y = gridEnv.height - 1; y >= 0; y--) {
+
+			for (int x = 0; x < gridEnv.width; x++) {
+				if (gridEnv.isWalkable(x, y) && gridEnv.isEdge(x,y)) {
+                    decrementC(new Vector2(x,y));
+				}
+
+			}
+		}
+	}
+
 	public Vector2 minVisitedANT(Vector2 pos) {
 
 		Vector2 gridPos = gridEnv.convertToGrid(pos);
@@ -239,44 +266,86 @@ public class BaseStation : MonoBehaviour {
 		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
 			minPos = position;
 			minCount = gridEnv.getCount(position);
-		}
-		position = new Vector2(gridPos.x+1, gridPos.y+1);
-		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
-			minPos = position;
-			minCount = gridEnv.getCount(position);
+
+			position = new Vector2(gridPos.x+2, gridPos.y);
+			if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+				minPos = position;
+				minCount = gridEnv.getCount(position);
+				position = new Vector2(gridPos.x+3, gridPos.y);
+				if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+					minPos = position;
+					minCount = gridEnv.getCount(position);
+				}
+			}
 		}
         position = new Vector2(gridPos.x, gridPos.y+1);
         if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
 			minPos = position;
 			minCount = gridEnv.getCount(position);
-		}
-        position = new Vector2(gridPos.x-1, gridPos.y+1);
-        if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
-			minPos = position;
-			minCount = gridEnv.getCount(position);
+			position = new Vector2(gridPos.x, gridPos.y+2);
+			if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+				minPos = position;
+				minCount = gridEnv.getCount(position);
+				position = new Vector2(gridPos.x, gridPos.y+3);
+				if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+					minPos = position;
+					minCount = gridEnv.getCount(position);
+				}
+			}
 		}
         position = new Vector2(gridPos.x-1, gridPos.y);
         if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
 			minPos = position;
 			minCount = gridEnv.getCount(position);
+			position = new Vector2(gridPos.x-2, gridPos.y);
+			if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+				minPos = position;
+				minCount = gridEnv.getCount(position);
+				position = new Vector2(gridPos.x-3, gridPos.y);
+				if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+					minPos = position;
+					minCount = gridEnv.getCount(position);
+				}
+			}
 		}
 		position = new Vector2(gridPos.x, gridPos.y-1);
 		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
 			minPos = position;
 			minCount = gridEnv.getCount(position);
-		}
-		position = new Vector2(gridPos.x-1, gridPos.y-1);
-		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
-			minPos = position;
-			minCount = gridEnv.getCount(position);
-		}
-		position = new Vector2(gridPos.x+1, gridPos.y-1);
-		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
-			minPos = position;
-			minCount = gridEnv.getCount(position);
+			position = new Vector2(gridPos.x, gridPos.y-2);
+			if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+				minPos = position;
+				minCount = gridEnv.getCount(position);
+
+				position = new Vector2(gridPos.x, gridPos.y-3);
+				if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+					minPos = position;
+					minCount = gridEnv.getCount(position);
+				}
+			}
 		}
 
-		Debug.Log(minCount);
+//		position = new Vector2(gridPos.x+1, gridPos.y+1);
+//		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+//			minPos = position;
+//			minCount = gridEnv.getCount(position);
+//		}
+//        position = new Vector2(gridPos.x-1, gridPos.y+1);
+//        if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+//			minPos = position;
+//			minCount = gridEnv.getCount(position);
+//		}
+//		position = new Vector2(gridPos.x-1, gridPos.y-1);
+//		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+//			minPos = position;
+//			minCount = gridEnv.getCount(position);
+//		}
+//		position = new Vector2(gridPos.x+1, gridPos.y-1);
+//		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+//			minPos = position;
+//			minCount = gridEnv.getCount(position);
+//		}
+
 		return minPos;
 
 	}

@@ -132,6 +132,7 @@ public class Agent : MonoBehaviour {
         Vector2 pos = baseStation.minVisitedANT(transform.position);
 
 		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
 		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
 		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
 		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
@@ -502,6 +503,9 @@ public class Agent : MonoBehaviour {
 
 		if (path.Count != 0)
 			move(path[0]);
+
+
+	    baseStation.decrementC(transform.position);
 	}
 
 	private void moveToTarget() {
