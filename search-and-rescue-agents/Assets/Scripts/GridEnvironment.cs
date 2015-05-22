@@ -141,6 +141,11 @@ public class GridEnvironment {
 	}
 
 	public bool isWalkable(int x, int y) {
+		if(x < 0 || y < 0 || x >= grid.GetLength(0) || y >= grid.GetLength(1)) {
+			Debug.Log ("[WARNING] Index out of bounds in GridEnvironment");
+			return false;
+		}
+
 		if (grid[x, y].type == Tile.Type.GROUND || grid[x, y].type == Tile.Type.HUMAN) {
 			return true;
 		} else {

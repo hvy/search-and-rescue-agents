@@ -10,8 +10,12 @@ public class Agent : MonoBehaviour {
 	public float velocity;
 	public float rotationSpeed;
 	public float collisionDistance;
-
 	public Vector2 start;
+
+	// Brownian walk
+	private int browninanSegmentLength; // measured in frames
+	private int brownianSegmentCount = 0; // measured in frames
+	private int brownianDirection = -1;
 
 	private System.Random rand;
 	private BaseStation baseStation;
@@ -120,6 +124,39 @@ public class Agent : MonoBehaviour {
 
 	/* Brownian walk */
     private void performRandom() {
+		
+		if (brownianDirection < 0 || brownianSegmentCount >= browninanSegmentLength) {
+			// Not yet defined or walked in this direction for long enough, re-initialize the walk
+			brownianDirection = rand.Next (4);
+			brownianSegmentCount = 0;
+			browninanSegmentLength = rand.Next(1, 200);
+		} else {
+
+			Vector2 nextPos = new Vector2 (transform.position.x, transform.position.y);
+
+			if (brownianDirection == 0)
+				nextPos += Vector2.up;
+			else if (brownianDirection == 1)
+				nextPos += Vector2.right;
+			else if (brownianDirection == 2)
+				nextPos -= Vector2.up;
+			else if (brownianDirection == 3)
+				nextPos -= Vector2.right;
+
+			Vector2 gridCoordNextPos = baseStation.gridEnv.convertToGrid (nextPos);
+
+			if (baseStation.gridEnv.isWalkable ((int)gridCoordNextPos.x, (int)gridCoordNextPos.y)) {
+				brownianSegmentCount++;
+				move (nextPos);
+			} else {
+				// Blocked, re-initialize the walk
+				brownianDirection = rand.Next (4);
+				brownianSegmentCount = 0;
+				browninanSegmentLength = rand.Next(1, 200);
+			}
+		}
+
+		/*
 		Vector2 pos = new Vector2(-1,-1);
 
         int x = rand.Next(baseStation.gridEnv.getWidth());
@@ -128,6 +165,7 @@ public class Agent : MonoBehaviour {
         pos.y = y;
 
         move(pos);
+        */
     }
 
 	/* Flood fill, but doesnt move toward nearest edge */
