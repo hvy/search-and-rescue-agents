@@ -1,6 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MainMediumLevel.cs">
+    <Files>
+      <File FileName="Assets\Scripts\GridEnvironment.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MainMediumLevel.cs" Line="41" Column="15" />
+      <File FileName="Assets\Scripts\StageCreator.cs" Line="40" Column="40" />
+      <File FileName="Assets\Scripts\BaseStation.cs" Line="69" Column="26" />
+      <File FileName="Assets\Scripts\AStarPathFinding.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Agent.cs" Line="417" Column="31" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

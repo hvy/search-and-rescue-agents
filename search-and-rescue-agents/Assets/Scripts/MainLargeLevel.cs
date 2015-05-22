@@ -7,7 +7,7 @@ using System.Collections.Generic;
  * It then waits for the user input to create the rescue agents (mouse clicks)
  * and then to start the simulation (space bar).
  */
-public class Main : MonoBehaviour {
+public class MainLargeLevel : MonoBehaviour {
 
 	public Vector2 environmentPosition;
 

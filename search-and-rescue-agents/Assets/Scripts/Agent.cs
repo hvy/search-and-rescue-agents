@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Agent : MonoBehaviour {
 
+	public enum ExplorationStrategy { FloodFillRandom, FloodFillNearest, Brownian, TeSLiSMA };
+
+	public ExplorationStrategy explorationStrategy;
 	public float velocity;
 	public float rotationSpeed;
 	public float collisionDistance;
@@ -89,12 +92,28 @@ public class Agent : MonoBehaviour {
 		collisionAvoidance(g);
 	}
 
+	/**
+	 * Explores the environment using the specified exploration strategy
+	 */
     private void searchForTargets() {
 
-        //performFloodFillNearest();
-        performFloodFillRandom();
-        //performRandom();
-
+		switch (explorationStrategy) {
+			case ExplorationStrategy.FloodFillNearest:
+				performFloodFillNearest();
+				break;
+			case ExplorationStrategy.FloodFillRandom:
+				performFloodFillRandom();
+				break;
+			case ExplorationStrategy.Brownian:
+				performRandom();
+				break;
+			case ExplorationStrategy.TeSLiSMA:
+				// TODO
+				break;
+			default:
+				Debug.Log("[ERROR] Exploration strategy not found");
+				break;
+		}
 
 		searchCount++;
     }
@@ -475,4 +494,6 @@ public class Agent : MonoBehaviour {
 	private bool isTouching(Vector2 pos) {
 		return Vector2.Distance (transform.position, pos) < 0.5f;
 	}
+
+
 }
