@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class BaseStation : MonoBehaviour {
 
@@ -16,12 +17,15 @@ public class BaseStation : MonoBehaviour {
 	private int width, height;
 
 	private int updateAntC = 0;
+	private double time = 0;
+	GameObject ui;
 
 	void Start () {
 		agents = new List<Agent> ();
 		assignedTargets = new List<Human> ();
 		unassignedTargets = new List<Human> ();
 		rand = new System.Random();
+		ui = GameObject.Find ("Hejsan");
 	}
 
 	/**
@@ -68,8 +72,13 @@ public class BaseStation : MonoBehaviour {
 		}
 
 		/* Update weights for ANT algo */
-		if (updateAntC > 100) {
+		if (agents.Count > 0)
+			time += Time.deltaTime;
+		if (updateAntC > 5) {
 //			weightANT();
+			Text txt = (Text) ui.GetComponent(typeof(Text));
+			txt.text = "Covered: " + (1 - tilesUnknown()/(gridEnv.getHeight()*gridEnv.getWidth()) + "%");
+			txt.text += "\nTime: " + time;
 			updateAntC = 0;
 		}
 		updateAntC += 1;
@@ -253,6 +262,20 @@ public class BaseStation : MonoBehaviour {
 
 			}
 		}
+	}
+
+	public double tilesUnknown() {
+		int i = 0;
+		for (int y = gridEnv.height - 1; y >= 0; y--) {
+
+			for (int x = 0; x < gridEnv.width; x++) {
+				if (gridEnv.isUnknown(x, y)) {
+					i++;
+				}
+
+			}
+		}
+		return i;
 	}
 
 	public Vector2 minVisitedANT(Vector2 pos) {
