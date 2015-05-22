@@ -11,6 +11,7 @@ public class GridEnvironment {
     public Tile[,] grid;
     public float tileSize;
 
+
     // UNKNOWN as default
     public class Tile {
 
@@ -23,11 +24,13 @@ public class GridEnvironment {
 
 		int x, y;
         public Type type;
+        public int C; // counter for ANT
 
         public Tile(int x, int y) {
 			this.x = x;
 			this.y = y;
 			type = Tile.Type.UNKNOWN;
+			C = 0;
         }
 
         public bool isInTile(Vector2 pos) {
@@ -60,6 +63,7 @@ public class GridEnvironment {
 			pos.y = height-1;
 		
 		grid[Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y)].type = Tile.Type.HUMAN;
+		grid[(int)pos.x, (int)pos.y].C++;
     }
 
     public void addObstacle(Vector2 pos) {
@@ -71,6 +75,7 @@ public class GridEnvironment {
             pos.y = height-1;
 
         grid[Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y)].type = Tile.Type.OBSTACLE;
+        grid[(int)pos.x, (int)pos.y].C = -1;
     }
 
     public void addGround(Vector2 pos) {
@@ -82,6 +87,22 @@ public class GridEnvironment {
             pos.y = height-1;
 
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
+        grid[(int)pos.x, (int)pos.y].C++;
+
+    }
+
+    public void antChange(Vector2 pos, int i) {
+//        pos = convertToGrid(pos);
+//
+//        if ((int)pos.x >= width)
+//            pos.x = width-1;
+//        if ((int)pos.y >= height)
+//            pos.y = height-1;
+//
+//        grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
+//        if (grid[(int)pos.x, (int)pos.y].C == 0)
+//            grid[(int)pos.x, (int)pos.y].C++;
+//        else
     }
 
     public Vector2 convertToGrid(Vector2 pos) {

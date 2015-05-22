@@ -91,11 +91,30 @@ public class Agent : MonoBehaviour {
 
     private void searchForTargets() {
 
-		// TODO Use flood fill algorithm (right now moving to a random edge tile to explore)
+        //performFloodFillNearest();
+        performFloodFillRandom();
+        //performRandom();
+
+
+		searchCount++;
+    }
+
+	/* Brownian walk */
+    private void performRandom() {
 		Vector2 pos = new Vector2(-1,-1);
 
+        int x = rand.Next(baseStation.gridEnv.getWidth());
+        int y = rand.Next(baseStation.gridEnv.getHeight());
+        pos.x = x;
+        pos.y = y;
 
-		pos = baseStation.getEdge(transform.position);
+        move(pos);
+    }
+
+	/* Flood fill, but doesnt move toward nearest edge */
+    private void performFloodFillRandom() {
+  		Vector2 pos = new Vector2(-1,-1);
+		pos = baseStation.getEdge();
 		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
 		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
 
@@ -118,14 +137,48 @@ public class Agent : MonoBehaviour {
 		if (searchCount > 50) {
 			goal = pos;
 			searchCount = 0;
-        }
+		}
 
 		if (path == null || path.Count == 0)
 			move(goal);
 		else
 			move(path[0]);
-		searchCount++;
     }
+
+	/* Flood fill, moves to nearest edge */
+    private void performFloodFillNearest() {
+		Vector2 pos = new Vector2(-1,-1);
+    	pos = baseStation.getEdge(transform.position);
+		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
+		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
+
+		if (to.x == -1 && to.y == -1) {
+			moveToEntrance();
+			return;
+		}
+
+		if (path != null && path.Count != 0 && !baseStation.isEdge(path[path.Count-1])) {
+			path = null;
+		}
+
+		if (path == null || path.Count == 0)
+			path = baseStation.getPathFromTo (from, to);
+
+		if (path != null && isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
+			path.RemoveAt(0);
+		}
+
+		if (searchCount > 50) {
+			goal = pos;
+			searchCount = 0;
+		}
+
+		if (path == null || path.Count == 0)
+			move(goal);
+		else
+			move(path[0]);
+    }
+
 
 	private void moveTowardsEnvironment() {
 		goal = closestEntrance();

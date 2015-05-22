@@ -180,4 +180,22 @@ public class BaseStation : MonoBehaviour {
 //		return new Vector2(-1,-1);
 		return closest;
 	}
+
+	public Vector2 getEdge() {
+
+    		int x_mod = rand.Next(gridEnv.width);
+    		int y_mod = rand.Next(gridEnv.height);
+
+    		for (int y = gridEnv.height - 1; y >= 0; y--) {
+
+    			for (int x = 0; x < gridEnv.width; x++) {
+    				if (gridEnv.isWalkable(x_mod, y_mod) && gridEnv.isEdge(x_mod,y_mod)) {
+    					Vector2 temp = new Vector2(x_mod,y_mod);
+    					return temp;
+    				}
+    				x_mod = (x_mod+1)%(gridEnv.width - 1);
+    			}
+    		}
+    		return new Vector2(-1,-1);
+    	}
 }
