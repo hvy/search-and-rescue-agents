@@ -36,7 +36,7 @@
         <entry file="file://$PROJECT_DIR$/Agent.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="125" column="8" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
+              <caret line="162" column="8" selection-start-line="162" selection-start-column="8" selection-end-line="162" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -96,7 +96,7 @@
         <entry file="file://$PROJECT_DIR$/GridEnvironment.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.5102041">
-              <caret line="80" column="42" selection-start-line="80" selection-start-column="40" selection-end-line="80" selection-end-column="40" />
+              <caret line="86" column="42" selection-start-line="86" selection-start-column="29" selection-end-line="86" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -131,8 +131,8 @@
         <option value="$PROJECT_DIR$/AStarPathFinding.cs" />
         <option value="$PROJECT_DIR$/EnvironmentFactory.cs" />
         <option value="$PROJECT_DIR$/Agent.cs" />
-        <option value="$PROJECT_DIR$/GridEnvironment.cs" />
         <option value="$PROJECT_DIR$/BaseStation.cs" />
+        <option value="$PROJECT_DIR$/GridEnvironment.cs" />
       </list>
     </option>
   </component>
@@ -686,7 +686,7 @@
     <entry file="file://$PROJECT_DIR$/Agent.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="125" column="8" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
+          <caret line="162" column="8" selection-start-line="162" selection-start-column="8" selection-end-line="162" selection-end-column="8" />
           <folding />
         </state>
       </provider>
@@ -694,7 +694,7 @@
     <entry file="file://$PROJECT_DIR$/GridEnvironment.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5102041">
-          <caret line="80" column="42" selection-start-line="80" selection-start-column="40" selection-end-line="80" selection-end-column="40" />
+          <caret line="86" column="42" selection-start-line="86" selection-start-column="29" selection-end-line="86" selection-end-column="29" />
           <folding />
         </state>
       </provider>
