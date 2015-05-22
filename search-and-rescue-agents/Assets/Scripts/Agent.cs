@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Agent : MonoBehaviour {
 
-	public enum ExplorationStrategy { FloodFillRandom, FloodFillNearest, Brownian, TeSLiSMA };
+	public enum ExplorationStrategy { FloodFillRandom, FloodFillNearest, FloodFillNearestAStar, Brownian, TeSLiSMA };
 
 	public ExplorationStrategy explorationStrategy;
 	public float velocity;
@@ -88,7 +88,6 @@ public class Agent : MonoBehaviour {
 	}
 
 	private void move (Vector2 g) {
-		Debug.DrawLine(transform.position, g, Color.white);
 		collisionAvoidance(g);
 	}
 
@@ -100,6 +99,9 @@ public class Agent : MonoBehaviour {
 		switch (explorationStrategy) {
 			case ExplorationStrategy.FloodFillNearest:
 				performFloodFillNearest();
+				break;
+		    case ExplorationStrategy.FloodFillNearestAStar:
+				performFloodFillNearestAStar();
 				break;
 			case ExplorationStrategy.FloodFillRandom:
 				performFloodFillRandom();
@@ -126,8 +128,35 @@ public class Agent : MonoBehaviour {
         int y = rand.Next(baseStation.gridEnv.getHeight());
         pos.x = x;
         pos.y = y;
+        Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
+        Vector2 to = baseStation.gridEnv.convertToGrid (pos);
 
-        move(pos);
+        if (path != null && path.Count != 0 && !baseStation.isEdge(path[path.Count-1])) {
+			path = null;
+		}
+
+		if (path == null || path.Count == 0)
+			path = baseStation.getPathFromTo (from, to);
+
+		if (path == null) {
+			move(pos);
+			path = new List<Vector2>();
+			return;
+		}
+
+		if (path != null && isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
+			path.RemoveAt(0);
+		}
+
+		if (searchCount > 50) {
+			goal = pos;
+			searchCount = 0;
+		}
+
+		if (path == null || path.Count == 0)
+			move(goal);
+		else
+			move(path[0]);
     }
 
 	/* Flood fill, but doesnt move toward nearest edge */
@@ -168,6 +197,40 @@ public class Agent : MonoBehaviour {
     private void performFloodFillNearest() {
 		Vector2 pos = new Vector2(-1,-1);
     	pos = baseStation.getEdge(transform.position);
+		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
+		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
+
+		if (to.x == -1 && to.y == -1) {
+			moveToEntrance();
+			return;
+		}
+
+		if (path != null && path.Count != 0 && !baseStation.isEdge(path[path.Count-1])) {
+			path = null;
+		}
+
+		if (path == null || path.Count == 0)
+			path = baseStation.getPathFromTo (from, to);
+
+		if (path != null && isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
+			path.RemoveAt(0);
+		}
+
+		if (searchCount > 50) {
+			goal = pos;
+			searchCount = 0;
+		}
+
+		if (path == null || path.Count == 0)
+			move(goal);
+		else
+			move(path[0]);
+    }
+
+	/* Flood fill, moves to nearest edge in A star distance */
+    private void performFloodFillNearestAStar() {
+   		Vector2 pos = new Vector2(-1,-1);
+		pos = baseStation.getEdgeAStar(transform.position);
 		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
 		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
 
@@ -383,9 +446,11 @@ public class Agent : MonoBehaviour {
 			return;
 		}
 
-        if (path == null)
+        if (path == null) {
+        	Debug.Log("vafan");
         	return;
-		
+        }
+
 		if (path.Count > 0 /* A path is precomputed */) {
 			
 			if (isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
