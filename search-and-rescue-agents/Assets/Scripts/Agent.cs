@@ -124,6 +124,12 @@ public class Agent : MonoBehaviour {
 		searchCount++;
     }
 
+    /* ANT algorithm */
+
+    private void performANT() {
+
+    }
+
 	/* Brownian walk */
     private void performRandom() {
 		

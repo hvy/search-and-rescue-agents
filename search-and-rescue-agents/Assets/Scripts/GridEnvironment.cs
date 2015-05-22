@@ -91,20 +91,6 @@ public class GridEnvironment {
 
     }
 
-    public void antChange(Vector2 pos, int i) {
-//        pos = convertToGrid(pos);
-//
-//        if ((int)pos.x >= width)
-//            pos.x = width-1;
-//        if ((int)pos.y >= height)
-//            pos.y = height-1;
-//
-//        grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
-//        if (grid[(int)pos.x, (int)pos.y].C == 0)
-//            grid[(int)pos.x, (int)pos.y].C++;
-//        else
-    }
-
     public Vector2 convertToGrid(Vector2 pos) {
 		float flooredX = Mathf.Floor (pos.x);
 		float flooredY = Mathf.Floor (pos.y);

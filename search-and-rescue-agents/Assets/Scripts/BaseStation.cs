@@ -176,52 +176,60 @@ public class BaseStation : MonoBehaviour {
 	}
 
 	/* Get edge closest to pos */
-    	public Vector2 getEdgeAStar(Vector2 pos) {
+	public Vector2 getEdgeAStar(Vector2 pos) {
 
-    		int x_mod = rand.Next(gridEnv.width);
-    		int y_mod = rand.Next(gridEnv.height);
+		int x_mod = rand.Next(gridEnv.width);
+		int y_mod = rand.Next(gridEnv.height);
 
-    		Vector2 closest = new Vector2(-1, -1);
-    		float closestDistance = 1000000f;
+		Vector2 closest = new Vector2(-1, -1);
+		float closestDistance = 1000000f;
 
-    		for (int y = gridEnv.height - 1; y >= 0; y--) {
+		for (int y = gridEnv.height - 1; y >= 0; y--) {
 
-    			for (int x = 0; x < gridEnv.width; x++) {
-    				if (gridEnv.isWalkable(x_mod, y_mod) && gridEnv.isEdge(x_mod,y_mod)) {
-    					Vector2 temp = new Vector2(x_mod,y_mod);
-    					float dist;
-    					List<Vector2> path = AStarPathFinding.findPath(gridEnv.convertToGrid(pos), temp, gridEnv);
-    					if (path == null)
-    						dist = Vector2.Distance(temp, pos);
-    					else
-    						dist = path.Count;
-    					if (dist < closestDistance) {
-    						closestDistance = dist;
-    						closest = temp;
-    					}
-    				}
-    				x_mod = (x_mod+1)%(gridEnv.width - 1);
-    			}
-    			y_mod = (y_mod+1)%(gridEnv.height - 1);
-    		}
-    		return closest;
-    	}
+			for (int x = 0; x < gridEnv.width; x++) {
+				if (gridEnv.isWalkable(x_mod, y_mod) && gridEnv.isEdge(x_mod,y_mod)) {
+					Vector2 temp = new Vector2(x_mod,y_mod);
+					float dist;
+					List<Vector2> path = AStarPathFinding.findPath(gridEnv.convertToGrid(pos), temp, gridEnv);
+					if (path == null)
+						dist = Vector2.Distance(temp, pos);
+					else
+						dist = path.Count;
+					if (dist < closestDistance) {
+						closestDistance = dist;
+						closest = temp;
+					}
+				}
+				x_mod = (x_mod+1)%(gridEnv.width - 1);
+			}
+			y_mod = (y_mod+1)%(gridEnv.height - 1);
+		}
+		return closest;
+	}
 
 	public Vector2 getEdge() {
+		int x_mod = rand.Next(gridEnv.width);
+		int y_mod = rand.Next(gridEnv.height);
 
-    		int x_mod = rand.Next(gridEnv.width);
-    		int y_mod = rand.Next(gridEnv.height);
+		for (int y = gridEnv.height - 1; y >= 0; y--) {
 
-    		for (int y = gridEnv.height - 1; y >= 0; y--) {
+			for (int x = 0; x < gridEnv.width; x++) {
+				if (gridEnv.isWalkable(x_mod, y_mod) && gridEnv.isEdge(x_mod,y_mod)) {
+					Vector2 temp = new Vector2(x_mod,y_mod);
+					return temp;
+				}
+				x_mod = (x_mod+1)%(gridEnv.width - 1);
+			}
+		}
+		return new Vector2(-1,-1);
+	}
 
-    			for (int x = 0; x < gridEnv.width; x++) {
-    				if (gridEnv.isWalkable(x_mod, y_mod) && gridEnv.isEdge(x_mod,y_mod)) {
-    					Vector2 temp = new Vector2(x_mod,y_mod);
-    					return temp;
-    				}
-    				x_mod = (x_mod+1)%(gridEnv.width - 1);
-    			}
-    		}
-    		return new Vector2(-1,-1);
-    	}
+	public Vector2 minVisitedANT(Vector2 pos) {
+		Vector2 gridPos = gridEnv.convertToGrid(pos);
+
+        Vector2 minPos;
+        int minCount = 1000000;
+
+
+	}
 }
