@@ -63,7 +63,7 @@ public class GridEnvironment {
 			pos.y = height-1;
 		
 		grid[Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y)].type = Tile.Type.HUMAN;
-		grid[(int)pos.x, (int)pos.y].C++;
+//		grid[(int)pos.x, (int)pos.y].C += 1;
     }
 
     public void addObstacle(Vector2 pos) {
@@ -87,8 +87,23 @@ public class GridEnvironment {
             pos.y = height-1;
 
         grid[(int)pos.x, (int)pos.y].type = Tile.Type.GROUND;
-        grid[(int)pos.x, (int)pos.y].C++;
+//        grid[(int)pos.x, (int)pos.y].C += 1;
 
+    }
+
+    public int getCount(Vector2 pos) {
+        pos = convertToGrid(pos);
+
+        if ((int)pos.x >= width)
+            pos.x = width-1;
+        if ((int)pos.y >= height)
+            pos.y = height-1;
+        if ((int)pos.x <= 0)
+            pos.x = 1;
+        if ((int)pos.y <= 0)
+            pos.y = 1;
+
+        return grid[(int)pos.x, (int)pos.y].C;
     }
 
     public Vector2 convertToGrid(Vector2 pos) {
@@ -124,6 +139,24 @@ public class GridEnvironment {
 
 	    return false;
 
+	}
+
+	public void incrementC(Vector2 pos) {
+	    pos = convertToGrid(pos);
+
+        if ((int)pos.x >= width)
+            pos.x = width-1;
+        if ((int)pos.y >= height)
+            pos.y = height-1;
+        if ((int)pos.x <= 0)
+            pos.x = 1;
+        if ((int)pos.y <= 0)
+            pos.y = 1;
+
+        if (grid[(int)pos.x, (int)pos.y].C == -1)
+            return;
+
+        grid[(int)pos.x, (int)pos.y].C += 1;
 	}
 
 	public bool isWalkable(int x, int y) {

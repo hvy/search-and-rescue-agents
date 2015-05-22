@@ -105,9 +105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73bbc2ade83d2472cad8f01f6c1cb3a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explorationStrategy: 2
-  velocity: 4
-  rotationSpeed: 15
+  explorationStrategy: 4
+  velocity: 10
+  rotationSpeed: 20
   collisionDistance: .200000003
   start: {x: 0, y: 0}
 --- !u!222 &22276604

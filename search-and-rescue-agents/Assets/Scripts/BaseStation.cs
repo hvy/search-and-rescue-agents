@@ -224,12 +224,60 @@ public class BaseStation : MonoBehaviour {
 		return new Vector2(-1,-1);
 	}
 
+	public void incrementC(Vector2 pos) {
+		gridEnv.incrementC(pos);
+	}
+
 	public Vector2 minVisitedANT(Vector2 pos) {
+
 		Vector2 gridPos = gridEnv.convertToGrid(pos);
 
-        Vector2 minPos;
-        int minCount = 1000000;
+        Vector2 minPos = new Vector2(-1, -1);
+        int minCount = 100000000;
 
+		Vector2 position = new Vector2(gridPos.x+1, gridPos.y);
+		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+		position = new Vector2(gridPos.x+1, gridPos.y+1);
+		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+        position = new Vector2(gridPos.x, gridPos.y+1);
+        if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+        position = new Vector2(gridPos.x-1, gridPos.y+1);
+        if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+        position = new Vector2(gridPos.x-1, gridPos.y);
+        if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+		position = new Vector2(gridPos.x, gridPos.y-1);
+		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+		position = new Vector2(gridPos.x-1, gridPos.y-1);
+		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+		position = new Vector2(gridPos.x+1, gridPos.y-1);
+		if (gridEnv.getCount(position) < minCount && gridEnv.getCount(position) != -1) {
+			minPos = position;
+			minCount = gridEnv.getCount(position);
+		}
+
+		Debug.Log(minCount);
+		return minPos;
 
 	}
 }

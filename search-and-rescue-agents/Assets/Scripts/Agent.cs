@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Agent : MonoBehaviour {
 
-	public enum ExplorationStrategy { FloodFillRandom, FloodFillNearest, FloodFillNearestAStar, Brownian, TeSLiSMA };
+	public enum ExplorationStrategy { FloodFillRandom, FloodFillNearest, FloodFillNearestAStar, Brownian, ANT };
 
 	public ExplorationStrategy explorationStrategy;
 	public float velocity;
@@ -56,11 +56,13 @@ public class Agent : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other) {
 		sendEnvironmentData(other); // Collect information. This trigger will find humans and obstacles.
+//		baseStation.incrementC(other.transform.position);
     }
 
 
     void OnTriggerStay2D(Collider2D other) {
 		sendEnvironmentData(other);          // TODO maybe shouldn't be called EVERY time for performance reasons?
+//        baseStation.incrementC(other.transform.position);
     }
 
 
@@ -113,8 +115,8 @@ public class Agent : MonoBehaviour {
 			case ExplorationStrategy.Brownian:
 				performRandom();
 				break;
-			case ExplorationStrategy.TeSLiSMA:
-				// TODO
+			case ExplorationStrategy.ANT:
+				performANT();
 				break;
 			default:
 				Debug.Log("[ERROR] Exploration strategy not found");
@@ -127,6 +129,20 @@ public class Agent : MonoBehaviour {
     /* ANT algorithm */
 
     private void performANT() {
+        Vector2 pos = baseStation.minVisitedANT(transform.position);
+
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
+		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
+		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
+		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y-1));
+
+		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y-1));
+		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y+1));
+		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y-1));
+		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y+1));
+
+        move(pos);
 
     }
 
