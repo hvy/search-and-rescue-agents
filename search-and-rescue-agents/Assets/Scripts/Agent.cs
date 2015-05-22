@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Agent : MonoBehaviour {
 
+	public enum ExplorationStrategy { RandomNearestUnexplored, TeSLiSMA };
+
+	public ExplorationStrategy explorationStrategy;
 	public float velocity;
 	public float rotationSpeed;
 	public float collisionDistance;
@@ -89,42 +92,24 @@ public class Agent : MonoBehaviour {
 		collisionAvoidance(g);
 	}
 
+	/**
+	 * Explores the environment using the specified exploration strategy
+	 */
     private void searchForTargets() {
 
-		// TODO Use flood fill algorithm (right now moving to a random edge tile to explore)
-		Vector2 pos = new Vector2(-1,-1);
-
-
-		pos = baseStation.getEdge(transform.position);
-		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
-		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
-
-		if (to.x == -1 && to.y == -1) {
-			moveToEntrance();
-			return;
+		switch (explorationStrategy) {
+		case ExplorationStrategy.RandomNearestUnexplored:
+			explorationRandomNearest();
+			break;
+		case ExplorationStrategy.TeSLiSMA:
+			// TODO
+			break;
+		default:
+			Debug.Log("[ERROR] Exploration strategy not found");
+			break;
 		}
 
-		if (path != null && path.Count != 0 && !baseStation.isEdge(path[path.Count-1])) {
-			path = null;
-		}
 
-		if (path == null || path.Count == 0)
-			path = baseStation.getPathFromTo (from, to);
-
-		if (path != null && isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
-			path.RemoveAt(0);
-		}
-
-		if (searchCount > 50) {
-			goal = pos;
-			searchCount = 0;
-        }
-
-		if (path == null || path.Count == 0)
-			move(goal);
-		else
-			move(path[0]);
-		searchCount++;
     }
 
 	private void moveTowardsEnvironment() {
@@ -421,5 +406,42 @@ public class Agent : MonoBehaviour {
 
 	private bool isTouching(Vector2 pos) {
 		return Vector2.Distance (transform.position, pos) < 0.5f;
+	}
+
+	void explorationRandomNearest ()
+	{
+		Vector2 pos = new Vector2(-1,-1);
+
+		pos = baseStation.getEdge(transform.position);
+		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
+		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
+		
+		if (to.x == -1 && to.y == -1) {
+			moveToEntrance();
+			return;
+		}
+		
+		if (path != null && path.Count != 0 && !baseStation.isEdge(path[path.Count-1])) {
+			path = null;
+		}
+		
+		if (path == null || path.Count == 0)
+			path = baseStation.getPathFromTo (from, to);
+		
+		if (path != null && isTouching(path[0]) /* Remove a checkpoint from the path if it is reached*/) {
+			path.RemoveAt(0);
+		}
+		
+		if (searchCount > 50) {
+			goal = pos;
+			searchCount = 0;
+		}
+		
+		if (path == null || path.Count == 0)
+			move(goal);
+		else
+			move(path[0]);
+		
+		searchCount++;
 	}
 }
