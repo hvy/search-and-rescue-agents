@@ -16,6 +16,7 @@ public class BaseStation : MonoBehaviour {
 	private System.Random rand;
 	private int width, height;
 
+	private int savedTargets = 0;
 	private int updateAntC = 0;
 	private double time = 0;
 	GameObject ui;
@@ -77,8 +78,9 @@ public class BaseStation : MonoBehaviour {
 		if (updateAntC > 5) {
 //			weightANT();
 			Text txt = (Text) ui.GetComponent(typeof(Text));
-			txt.text = "Covered: " + (1 - tilesUnknown()/(gridEnv.getHeight()*gridEnv.getWidth()) + "%");
-			txt.text += "\nTime: " + time;
+			txt.text = "Covered: " + System.String.Format("{0:0.00}", (100 *(1 - tilesUnknown()/(gridEnv.getHeight()*gridEnv.getWidth()))) + "%" );
+			txt.text += "\nTime: " + System.String.Format("{0:0.00}", time) + "s";
+			txt.text += "\nSaved: " + savedTargets;
 			updateAntC = 0;
 		}
 		updateAntC += 1;
@@ -110,6 +112,7 @@ public class BaseStation : MonoBehaviour {
 			Debug.Log ("[ERROR] Rescued unregistered human");
 		} else {
 			Debug.Log ("[INFO] Rescued target");
+			savedTargets++;
 			assignedTargets.Remove(human);
 		}
 	}

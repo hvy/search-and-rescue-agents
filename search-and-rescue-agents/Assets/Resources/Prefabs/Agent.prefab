@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explorationStrategy: 1
-  velocity: 12
+  velocity: 5
   rotationSpeed: 30
   collisionDistance: .200000003
   start: {x: 0, y: 0}
