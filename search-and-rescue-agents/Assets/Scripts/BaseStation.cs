@@ -400,7 +400,7 @@ public class BaseStation : MonoBehaviour {
 		int index = rand.Next(positionsToChoose.Count);
 		if (index <= 0)
 			return minPos;
-		Debug.Log(index);
+//		Debug.Log(index);
 		return positionsToChoose[index];
 
 	}
