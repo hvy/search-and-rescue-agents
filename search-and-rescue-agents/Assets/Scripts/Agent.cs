@@ -138,15 +138,15 @@ public class Agent : MonoBehaviour {
 		baseStation.incrementC(transform.position);
 		baseStation.incrementC(transform.position);
 
-		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
-		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
-		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
-		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y-1));
-
-		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y-1));
-		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y+1));
-		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y-1));
-		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y+1));
+//		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
+//		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
+//		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
+//		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y-1));
+//
+//		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y-1));
+//		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y+1));
+//		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y-1));
+//		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y+1));
 
         move(pos);
 
@@ -167,15 +167,15 @@ public class Agent : MonoBehaviour {
 		baseStation.incrementC(transform.position);
 		baseStation.incrementC(transform.position);
 
-		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
-		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
-		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
-		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y-1));
-
-		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y-1));
-		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y+1));
-		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y-1));
-		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y+1));
+//		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
+//		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
+//		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
+//		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y-1));
+//
+//		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y-1));
+//		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y+1));
+//		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y-1));
+//		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y+1));
 
 		move(pos);
     }
