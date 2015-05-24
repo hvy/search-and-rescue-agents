@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Agent : MonoBehaviour {
 
-	public enum ExplorationStrategy { FloodFillRandom, FloodFillNearest, FloodFillNearestAStar, Brownian, ANT };
+	public enum ExplorationStrategy { FloodFillRandom, FloodFillNearest, FloodFillNearestAStar, Brownian, ANT, EANT};
 
 	public ExplorationStrategy explorationStrategy;
 	public float velocity;
@@ -26,6 +26,7 @@ public class Agent : MonoBehaviour {
 	private List<Vector2> path; // path to current goal (if exists)
 
 	private long c; // counter
+	private long AstarCount = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -118,6 +119,9 @@ public class Agent : MonoBehaviour {
 			case ExplorationStrategy.ANT:
 				performANT();
 				break;
+			case ExplorationStrategy.EANT:
+				performEANT();
+				break;
 			default:
 				Debug.Log("[ERROR] Exploration strategy not found");
 				break;
@@ -133,6 +137,7 @@ public class Agent : MonoBehaviour {
 
 		baseStation.incrementC(transform.position);
 		baseStation.incrementC(transform.position);
+
 		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
 		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
 		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
@@ -145,6 +150,34 @@ public class Agent : MonoBehaviour {
 
         move(pos);
 
+    }
+
+    private void performEANT() {
+    	baseStation.performEANT = true;
+    	Vector2 pos = baseStation.minVisitedANT(transform.position);
+
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+		baseStation.incrementC(transform.position);
+
+		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y));
+		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y+1));
+		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y));
+		baseStation.incrementC(new Vector2(transform.position.x, transform.position.y-1));
+
+		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y-1));
+		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y+1));
+		baseStation.incrementC(new Vector2(transform.position.x+1, transform.position.y-1));
+		baseStation.incrementC(new Vector2(transform.position.x-1, transform.position.y+1));
+
+		move(pos);
     }
 
 	/* Brownian walk */
@@ -295,9 +328,17 @@ public class Agent : MonoBehaviour {
     }
 
 	/* Flood fill, moves to nearest edge in A star distance */
+	private Vector2 previousPos = new Vector2(-1,-1);
     private void performFloodFillNearestAStar() {
-   		Vector2 pos = new Vector2(-1,-1);
-		pos = baseStation.getEdgeAStar(transform.position);
+   		Vector2 pos = previousPos;
+   		if (AstarCount > 0 || previousPos.x == -1) {
+			pos = baseStation.getEdgeAStar(transform.position);
+   			previousPos = pos;
+   			AstarCount = 0;
+   		} else
+   			pos = previousPos;
+
+		AstarCount++;
 		Vector2 from = baseStation.gridEnv.convertToGrid (transform.position);
 		Vector2 to = baseStation.gridEnv.convertToGrid (pos);
 
